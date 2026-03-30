@@ -1,0 +1,42 @@
+[package]
+id = "macro-economy-report"
+name = "매크로 경제 리포트"
+version = "1.0.0"
+description = "매일 주요 ETF 시장 데이터를 수집하고 LLM으로 요약하여 텔레그램으로 발송합니다."
+author = "KittyPaw Team"
+category = "finance"
+tags = ["finance", "market", "telegram", "daily", "llm"]
+
+[trigger]
+type = "schedule"
+cron = "0 8 * * 1-5"
+
+[permissions]
+primitives = ["Http", "Telegram", "Llm", "Storage"]
+allowed_hosts = ["query1.finance.yahoo.com", "query2.finance.yahoo.com"]
+
+[[config.fields]]
+key = "telegram_token"
+label = "텔레그램 봇 토큰"
+type = "secret"
+required = true
+
+[[config.fields]]
+key = "chat_id"
+label = "텔레그램 채팅 ID"
+type = "string"
+required = true
+
+[[config.fields]]
+key = "tickers"
+label = "Tickers (comma-separated)"
+type = "string"
+required = false
+default = "SPY,QQQ,TLT,GLD"
+
+[[config.fields]]
+key = "schedule"
+label = "Cron Schedule"
+type = "cron"
+required = false
+default = "0 8 * * 1-5"

@@ -1,0 +1,56 @@
+[package]
+id = "weather-briefing"
+name = "날씨 브리핑"
+version = "1.0.0"
+description = "매일 아침 설정한 도시의 날씨 예보를 가져와 자연어로 브리핑해줍니다."
+author = "KittyPaw Team"
+category = "weather"
+tags = ["weather", "telegram", "daily", "llm", "open-meteo"]
+
+[trigger]
+type = "schedule"
+cron = "0 7 * * *"
+
+[permissions]
+primitives = ["Http", "Telegram", "Llm"]
+allowed_hosts = ["api.open-meteo.com"]
+
+[[config.fields]]
+key = "telegram_token"
+label = "텔레그램 봇 토큰"
+type = "secret"
+required = true
+
+[[config.fields]]
+key = "chat_id"
+label = "텔레그램 채팅 ID"
+type = "string"
+required = true
+
+[[config.fields]]
+key = "city"
+label = "City Name (display only)"
+type = "string"
+required = false
+default = "Seoul"
+
+[[config.fields]]
+key = "latitude"
+label = "위도"
+type = "string"
+required = false
+default = "37.57"
+
+[[config.fields]]
+key = "longitude"
+label = "경도"
+type = "string"
+required = false
+default = "126.98"
+
+[[config.fields]]
+key = "schedule"
+label = "Cron Schedule"
+type = "cron"
+required = false
+default = "0 7 * * *"

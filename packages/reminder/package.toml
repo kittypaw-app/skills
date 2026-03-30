@@ -1,0 +1,15 @@
+[package]
+id = "reminder"
+name = "리마인더"
+version = "1.0.0"
+description = "키워드로 할 일을 추가하고, 목록을 보고, 완료 처리할 수 있는 리마인더입니다."
+author = "KittyPaw Team"
+category = "productivity"
+tags = ["reminder", "storage", "productivity", "keyword"]
+
+[trigger]
+type = "keyword"
+keyword = "remind"
+
+[permissions]
+primitives = ["Storage"]

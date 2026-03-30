@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "packages": [
+    {
+      "id": "weather-briefing",
+      "name": "아침 날씨 요약",
+      "version": "1.0.0",
+      "description": "매일 아침 날씨를 확인하고 텔레그램으로 보내줍니다.",
+      "author": "KittyPaw Team",
+      "category": "weather",
+      "tags": ["weather", "telegram", "daily"],
+      "download_url": "https://raw.githubusercontent.com/kittypaw-skills/registry/main/packages/weather-briefing"
+    },
+    {
+      "id": "url-monitor",
+      "name": "URL 변경 감지",
+      "version": "1.0.0",
+      "description": "주기적으로 URL 접속을 확인하고, 상태가 바뀌면 텔레그램으로 알려줍니다.",
+      "author": "KittyPaw Team",
+      "category": "monitoring",
+      "tags": ["url", "monitoring", "telegram"],
+      "download_url": "https://raw.githubusercontent.com/kittypaw-skills/registry/main/packages/url-monitor"
+    },
+    {
+      "id": "rss-digest",
+      "name": "RSS 뉴스 요약",
+      "version": "1.0.0",
+      "description": "RSS 피드에서 새 글을 가져와 LLM으로 요약한 뒤 텔레그램으로 보내줍니다.",
+      "author": "KittyPaw Team",
+      "category": "news",
+      "tags": ["rss", "news", "telegram", "llm"],
+      "download_url": "https://raw.githubusercontent.com/kittypaw-skills/registry/main/packages/rss-digest"
+    },
+    {
+      "id": "macro-economy-report",
+      "name": "매크로 경제 리포트",
+      "version": "1.0.0",
+      "description": "매일 주요 ETF 시장 데이터를 수집하고 LLM으로 요약하여 텔레그램으로 발송합니다.",
+      "author": "KittyPaw Team",
+      "category": "finance",
+      "tags": ["finance", "market", "telegram", "llm"],
+      "download_url": "https://raw.githubusercontent.com/kittypaw-skills/registry/main/packages/macro-economy-report"
+    },
+    {
+      "id": "reminder",
+      "name": "리마인더",
+      "version": "1.0.0",
+      "description": "키워드로 리마인더를 설정하고 관리합니다.",
+      "author": "KittyPaw Team",
+      "category": "productivity",
+      "tags": ["reminder", "productivity"],
+      "download_url": "https://raw.githubusercontent.com/kittypaw-skills/registry/main/packages/reminder"
+    }
+  ]
+}

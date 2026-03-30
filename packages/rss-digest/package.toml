@@ -1,0 +1,49 @@
+[package]
+id = "rss-digest"
+name = "RSS 뉴스 요약"
+version = "1.0.0"
+description = "RSS 피드에서 새 글을 가져와 LLM으로 요약한 뒤 텔레그램으로 보내줍니다."
+author = "KittyPaw Team"
+category = "news"
+tags = ["rss", "news", "telegram", "llm", "digest", "storage"]
+
+[trigger]
+type = "schedule"
+cron = "0 9 * * *"
+
+[permissions]
+primitives = ["Http", "Telegram", "Llm", "Storage"]
+allowed_hosts = ["*"]
+
+[[config.fields]]
+key = "telegram_token"
+label = "텔레그램 봇 토큰"
+type = "secret"
+required = true
+
+[[config.fields]]
+key = "chat_id"
+label = "텔레그램 채팅 ID"
+type = "string"
+required = true
+
+[[config.fields]]
+key = "feed_url"
+label = "RSS 피드 URL"
+type = "string"
+required = false
+default = "https://news.ycombinator.com/rss"
+
+[[config.fields]]
+key = "max_items"
+label = "Max New Items to Process"
+type = "number"
+required = false
+default = "5"
+
+[[config.fields]]
+key = "schedule"
+label = "Cron Schedule"
+type = "cron"
+required = false
+default = "0 9 * * *"
