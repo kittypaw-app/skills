@@ -20,12 +20,14 @@ key = "telegram_token"
 label = "텔레그램 봇 토큰"
 type = "secret"
 required = true
+source = "telegram/bot_token"
 
 [[config.fields]]
 key = "chat_id"
 label = "텔레그램 채팅 ID"
 type = "string"
 required = true
+source = "telegram/chat_id"
 
 [[config.fields]]
 key = "carrier"
