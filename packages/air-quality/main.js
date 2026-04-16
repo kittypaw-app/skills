@@ -1,8 +1,6 @@
 const ctx = JSON.parse(__context__);
 const config = ctx.config || {};
 
-const telegramToken = config.telegram_token;
-const chatId = config.chat_id;
 const apiKey = config.api_key;
 const station = config.station || "종로구";
 
@@ -46,6 +44,4 @@ const message = [
   `_출처: 에어코리아 · Powered by KittyPaw_`,
 ].join("\n");
 
-await Telegram.sendMessage(chatId, message, { parse_mode: "Markdown" });
-
-return `Air quality alert sent for ${station}: PM10=${pm10}, PM2.5=${pm25}`;
+return message;

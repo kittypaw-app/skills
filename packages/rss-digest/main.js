@@ -1,12 +1,10 @@
 // rss-digest/main.js
 // Fetches an RSS feed, filters already-seen items via Storage,
-// summarizes new items with LLM, and sends a digest to Telegram.
+// and summarizes new items with LLM.
 
 const ctx = JSON.parse(__context__);
 const config = ctx.config || {};
 
-const telegramToken = config.telegram_token;
-const chatId = config.chat_id;
 const feedUrl = config.feed_url || "https://news.ycombinator.com/rss";
 const maxItems = parseInt(config.max_items || "5", 10);
 
@@ -117,10 +115,8 @@ const lines = [
 ];
 const message = lines.join("\n");
 
-await Telegram.sendMessage(telegramToken, chatId, message, { parse_mode: "Markdown" });
-
 // --- Persist seen links (keep last 200 to avoid unbounded growth) ---
 const updatedSeen = [...seenLinks, ...toProcess.map(i => i.link)].slice(-200);
 await Storage.set(SEEN_KEY, JSON.stringify(updatedSeen));
 
-return `RSS digest sent: ${toProcess.length} new item(s) from ${feedUrl}.`;
+return message;

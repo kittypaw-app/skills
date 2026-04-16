@@ -1,13 +1,11 @@
 // url-monitor/main.js
 // Checks if a configured URL is reachable via Http.get.
 // Stores the last known status in Storage.
-// Sends a Telegram alert only when the status changes (up → down or down → up).
+// Returns an alert message when the status changes (up → down or down → up).
 
 const ctx = JSON.parse(__context__);
 const config = ctx.config || {};
 
-const telegramToken = config.telegram_token;
-const chatId = config.chat_id;
 const targetUrl = config.target_url;
 
 if (!targetUrl) {
@@ -91,17 +89,13 @@ if (statusChanged || isFirstCheck) {
     `_Powered by KittyPaw URL Monitor_`,
   ].join("\n");
 
-  await Telegram.sendMessage(telegramToken, chatId, message, { parse_mode: "Markdown" });
-  alertSent = true;
+  return message;
 }
 
-// Return a summary string for logging
-const summary = [
+// No status change — return summary for logging
+return [
   `URL: ${targetUrl}`,
   `Status: ${currentStatus.toUpperCase()}`,
   `Previous: ${previousStatus || "unknown (first check)"}`,
-  `Alert sent: ${alertSent}`,
   `Checked at: ${now}`,
 ].join(" | ");
-
-return summary;

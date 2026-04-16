@@ -1,12 +1,10 @@
 // lotto-check/main.js
-// Fetches the latest Lotto 6/45 draw results from dhlottery.co.kr,
-// compares them with the user's numbers, and sends the result to Telegram.
+// Fetches the latest Lotto 6/45 draw results from dhlottery.co.kr
+// and compares them with the user's numbers.
 
 const ctx = JSON.parse(__context__);
 const config = ctx.config || {};
 
-const telegramToken = config.telegram_token;
-const chatId = config.chat_id;
 const myNumbersRaw = config.my_numbers || "";
 
 // Parse user's numbers
@@ -82,6 +80,4 @@ const message = [
   `일치: ${matchCount}개 — ${prize}`,
 ].join("\n");
 
-await Telegram.sendMessage(telegramToken, chatId, message, { parse_mode: "Markdown" });
-
-return `Lotto check done. Round ${round}: matched ${matchCount} numbers. Prize: ${prize}`;
+return message;

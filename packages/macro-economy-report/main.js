@@ -1,13 +1,11 @@
 // macro-economy-report/main.js
-// Fetches daily price data for major ETFs via Yahoo Finance v8 API,
-// summarizes the market with LLM, and sends the report to Telegram.
+// Fetches daily price data for major ETFs via Yahoo Finance v8 API
+// and summarizes the market with LLM.
 
 const ctx = JSON.parse(__context__);
 const config = ctx.config || {};
 
 const tickers = (config.tickers || "SPY,QQQ,TLT,GLD").split(",").map(t => t.trim());
-const telegramToken = config.telegram_token;
-const chatId = config.chat_id;
 
 // --- Fetch price data for a single ticker ---
 async function fetchQuote(ticker) {
@@ -84,10 +82,7 @@ const lines = [
 ];
 const message = lines.join("\n");
 
-// Send to Telegram
-await Telegram.sendMessage(telegramToken, chatId, message, { parse_mode: "Markdown" });
-
 // Cache last run date in Storage so other skills can check freshness
 await Storage.set("macro_economy_last_run", JSON.stringify({ date: today, tickers }));
 
-return `Macro economy report sent for ${today}. Tickers: ${tickers.join(", ")}`;
+return message;

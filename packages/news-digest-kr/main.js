@@ -1,12 +1,10 @@
 // news-digest-kr/main.js
-// Fetches top Korean news from Google News RSS, summarizes each headline
-// with LLM in one sentence, and sends the digest to Telegram.
+// Fetches top Korean news from Google News RSS and summarizes each headline
+// with LLM in one sentence.
 
 const ctx = JSON.parse(__context__);
 const config = ctx.config || {};
 
-const telegramToken = config.telegram_token;
-const chatId = config.chat_id;
 const category = config.category || "경제";
 const count = config.count || 5;
 
@@ -88,6 +86,4 @@ const message =
   `${numbered}\n\n` +
   `_출처: Google 뉴스 · Powered by KittyPaw_`;
 
-await Telegram.sendMessage(telegramToken, chatId, message, { parse_mode: "MarkdownV2" });
-
-return `News digest sent: ${summaryLines.length} items (${category}).`;
+return message;

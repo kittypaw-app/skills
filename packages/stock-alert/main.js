@@ -1,13 +1,11 @@
 // stock-alert/main.js
-// Fetches the current stock price from Naver Finance API and sends a
-// Telegram alert when the price crosses a configured high or low threshold.
+// Fetches the current stock price from Naver Finance API and checks
+// if the price crosses a configured high or low threshold.
 // Uses Storage to avoid duplicate alerts for the same threshold crossing.
 
 const ctx = JSON.parse(__context__);
 const config = ctx.config || {};
 
-const telegramToken = config.telegram_token;
-const chatId = config.chat_id;
 const stockCode = config.stock_code || "005930";
 const stockName = config.stock_name || "삼성전자";
 const targetHigh = config.target_high != null ? Number(config.target_high) : null;
@@ -86,6 +84,4 @@ const message =
   `현재가: *${priceFormatted}원*\n` +
   `${emoji} ${direction} 목표가 ${targetFormatted}원 돌파\\!`;
 
-await Telegram.sendMessage(telegramToken, chatId, message, { parse_mode: "MarkdownV2" });
-
-return `Alert sent: ${stockName}(${stockCode}) ${direction} @ ${priceFormatted}원 (target: ${targetFormatted}원).`;
+return message;

@@ -2,32 +2,18 @@
 id = "air-quality"
 name = "미세먼지 알림"
 version = "1.0.0"
-description = "매일 아침 미세먼지/초미세먼지 등급을 확인하고 텔레그램으로 알려줍니다."
+description = "매일 아침 미세먼지/초미세먼지 등급을 확인하고 알려줍니다."
 author = "KittyPaw Team"
 category = "health"
-tags = ["air", "dust", "health", "telegram", "korea"]
+tags = ["air", "dust", "health", "korea"]
 
 [trigger]
 type = "schedule"
 cron = "0 7 * * *"
 
 [permissions]
-primitives = ["Http", "Telegram"]
+primitives = ["Http"]
 allowed_hosts = ["apis.data.go.kr"]
-
-[[config.fields]]
-key = "telegram_token"
-label = "텔레그램 봇 토큰"
-type = "secret"
-required = true
-source = "telegram/bot_token"
-
-[[config.fields]]
-key = "chat_id"
-label = "텔레그램 채팅 ID"
-type = "string"
-required = true
-source = "telegram/chat_id"
 
 [[config.fields]]
 key = "api_key"

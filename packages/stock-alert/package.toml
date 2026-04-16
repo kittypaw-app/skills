@@ -2,32 +2,18 @@
 id = "stock-alert"
 name = "주식 알림"
 version = "1.0.0"
-description = "지정한 종목이 목표 상한가 또는 하한가를 돌파하면 텔레그램으로 즉시 알림을 보냅니다."
+description = "지정한 종목이 목표 상한가 또는 하한가를 돌파하면 즉시 알려줍니다."
 author = "KittyPaw Team"
 category = "finance"
-tags = ["stock", "telegram", "alert", "naver-finance", "korea"]
+tags = ["stock", "alert", "naver-finance", "korea"]
 
 [trigger]
 type = "schedule"
 cron = "*/30 9-16 * * 1-5"
 
 [permissions]
-primitives = ["Http", "Telegram", "Storage"]
+primitives = ["Http", "Storage"]
 allowed_hosts = ["m.stock.naver.com"]
-
-[[config.fields]]
-key = "telegram_token"
-label = "텔레그램 봇 토큰"
-type = "secret"
-required = true
-source = "telegram/bot_token"
-
-[[config.fields]]
-key = "chat_id"
-label = "텔레그램 채팅 ID"
-type = "string"
-required = true
-source = "telegram/chat_id"
 
 [[config.fields]]
 key = "stock_code"

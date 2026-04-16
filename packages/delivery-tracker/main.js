@@ -1,12 +1,10 @@
 // delivery-tracker/main.js
-// Checks parcel delivery status via 스마트택배 API every 2 hours.
-// Sends a Telegram notification only when the status changes.
+// Checks parcel delivery status via 스마트택배 API.
+// Returns a notification message only when the status changes.
 
 const ctx = JSON.parse(__context__);
 const config = ctx.config || {};
 
-const telegramToken = config.telegram_token;
-const chatId = config.chat_id;
 const carrier = config.carrier;
 const trackingNumber = config.tracking_number;
 const apiKey = config.api_key;
@@ -81,6 +79,4 @@ const message = [
   `${latestTime}`,
 ].join("\n");
 
-await Telegram.sendMessage(telegramToken, chatId, message, { parse_mode: "Markdown" });
-
-return `Notification sent. Status changed from "${lastStatus || "(none)"}" to "${latestStatus}".`;
+return message;

@@ -1,12 +1,10 @@
 // weather-briefing/main.js
-// Fetches a 7-day weather forecast from Open-Meteo (free, no API key),
-// summarizes it with LLM, and sends the briefing to Telegram.
+// Fetches a 7-day weather forecast from Open-Meteo (free, no API key)
+// and summarizes it with LLM.
 
 const ctx = JSON.parse(__context__);
 const config = ctx.config || {};
 
-const telegramToken = config.telegram_token;
-const chatId = config.chat_id;
 const city = config.city || "Seoul";
 const latitude = config.latitude || "37.57";
 const longitude = config.longitude || "126.98";
@@ -57,7 +55,7 @@ try {
   summary = "(LLM summary unavailable)";
 }
 
-// Format Telegram message
+// Format result message
 const lines = [
   `🌤 *Weather Briefing — ${city} (${today})*`,
   ``,
@@ -71,8 +69,5 @@ const lines = [
   ``,
   `_Data: Open-Meteo · Powered by KittyPaw_`,
 ];
-const message = lines.join("\n");
 
-await Telegram.sendMessage(telegramToken, chatId, message, { parse_mode: "Markdown" });
-
-return `Weather briefing sent for ${city} on ${today}.`;
+return lines.join("\n");

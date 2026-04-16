@@ -2,32 +2,18 @@
 id = "url-monitor"
 name = "URL 모니터"
 version = "1.0.0"
-description = "주기적으로 URL 접속을 확인하고, 상태가 바뀌면 텔레그램으로 알려줍니다."
+description = "주기적으로 URL 접속을 확인하고, 상태가 바뀌면 알려줍니다."
 author = "KittyPaw Team"
 category = "devops"
-tags = ["monitoring", "uptime", "telegram", "storage", "alert"]
+tags = ["monitoring", "uptime", "storage", "alert"]
 
 [trigger]
 type = "schedule"
 cron = "*/5 * * * *"
 
 [permissions]
-primitives = ["Http", "Telegram", "Storage"]
+primitives = ["Http", "Storage"]
 allowed_hosts = ["*"]
-
-[[config.fields]]
-key = "telegram_token"
-label = "텔레그램 봇 토큰"
-type = "secret"
-required = true
-source = "telegram/bot_token"
-
-[[config.fields]]
-key = "chat_id"
-label = "텔레그램 채팅 ID"
-type = "string"
-required = true
-source = "telegram/chat_id"
 
 [[config.fields]]
 key = "target_url"

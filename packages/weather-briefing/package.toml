@@ -5,29 +5,15 @@ version = "1.0.0"
 description = "매일 아침 설정한 도시의 날씨 예보를 가져와 자연어로 브리핑해줍니다."
 author = "KittyPaw Team"
 category = "weather"
-tags = ["weather", "telegram", "daily", "llm", "open-meteo"]
+tags = ["weather", "daily", "llm", "open-meteo"]
 
 [trigger]
 type = "schedule"
 cron = "0 7 * * *"
 
 [permissions]
-primitives = ["Http", "Telegram", "Llm"]
+primitives = ["Http", "Llm"]
 allowed_hosts = ["api.open-meteo.com"]
-
-[[config.fields]]
-key = "telegram_token"
-label = "텔레그램 봇 토큰"
-type = "secret"
-required = true
-source = "telegram/bot_token"
-
-[[config.fields]]
-key = "chat_id"
-label = "텔레그램 채팅 ID"
-type = "string"
-required = true
-source = "telegram/chat_id"
 
 [[config.fields]]
 key = "city"

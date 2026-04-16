@@ -2,32 +2,18 @@
 id = "rss-digest"
 name = "RSS 뉴스 요약"
 version = "1.0.0"
-description = "RSS 피드에서 새 글을 가져와 LLM으로 요약한 뒤 텔레그램으로 보내줍니다."
+description = "RSS 피드에서 새 글을 가져와 LLM으로 요약합니다."
 author = "KittyPaw Team"
 category = "news"
-tags = ["rss", "news", "telegram", "llm", "digest", "storage"]
+tags = ["rss", "news", "llm", "digest", "storage"]
 
 [trigger]
 type = "schedule"
 cron = "0 9 * * *"
 
 [permissions]
-primitives = ["Http", "Telegram", "Llm", "Storage"]
+primitives = ["Http", "Llm", "Storage"]
 allowed_hosts = ["*"]
-
-[[config.fields]]
-key = "telegram_token"
-label = "텔레그램 봇 토큰"
-type = "secret"
-required = true
-source = "telegram/bot_token"
-
-[[config.fields]]
-key = "chat_id"
-label = "텔레그램 채팅 ID"
-type = "string"
-required = true
-source = "telegram/chat_id"
 
 [[config.fields]]
 key = "feed_url"
