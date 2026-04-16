@@ -13,7 +13,7 @@
         "telegram",
         "daily"
       ],
-      "download_url": "https://raw.githubusercontent.com/kittypaw-skills/registry/main/packages/weather-briefing"
+      "download_url": "https://raw.githubusercontent.com/kittypaw-app/skills/main/packages/weather-briefing"
     },
     {
       "id": "url-monitor",
@@ -27,7 +27,7 @@
         "monitoring",
         "telegram"
       ],
-      "download_url": "https://raw.githubusercontent.com/kittypaw-skills/registry/main/packages/url-monitor"
+      "download_url": "https://raw.githubusercontent.com/kittypaw-app/skills/main/packages/url-monitor"
     },
     {
       "id": "rss-digest",
@@ -42,7 +42,7 @@
         "telegram",
         "llm"
       ],
-      "download_url": "https://raw.githubusercontent.com/kittypaw-skills/registry/main/packages/rss-digest"
+      "download_url": "https://raw.githubusercontent.com/kittypaw-app/skills/main/packages/rss-digest"
     },
     {
       "id": "macro-economy-report",
@@ -57,7 +57,7 @@
         "telegram",
         "llm"
       ],
-      "download_url": "https://raw.githubusercontent.com/kittypaw-skills/registry/main/packages/macro-economy-report"
+      "download_url": "https://raw.githubusercontent.com/kittypaw-app/skills/main/packages/macro-economy-report"
     },
     {
       "id": "reminder",
@@ -70,7 +70,7 @@
         "reminder",
         "productivity"
       ],
-      "download_url": "https://raw.githubusercontent.com/kittypaw-skills/registry/main/packages/reminder"
+      "download_url": "https://raw.githubusercontent.com/kittypaw-app/skills/main/packages/reminder"
     },
     {
       "id": "air-quality",
@@ -85,7 +85,7 @@
         "health",
         "korea"
       ],
-      "download_url": "https://raw.githubusercontent.com/kittypaw-skills/registry/main/packages/air-quality"
+      "download_url": "https://raw.githubusercontent.com/kittypaw-app/skills/main/packages/air-quality"
     },
     {
       "id": "delivery-tracker",
@@ -99,7 +99,7 @@
         "tracking",
         "korea"
       ],
-      "download_url": "https://raw.githubusercontent.com/kittypaw-skills/registry/main/packages/delivery-tracker"
+      "download_url": "https://raw.githubusercontent.com/kittypaw-app/skills/main/packages/delivery-tracker"
     },
     {
       "id": "lotto-check",
@@ -112,7 +112,7 @@
         "lotto",
         "korea"
       ],
-      "download_url": "https://raw.githubusercontent.com/kittypaw-skills/registry/main/packages/lotto-check"
+      "download_url": "https://raw.githubusercontent.com/kittypaw-app/skills/main/packages/lotto-check"
     },
     {
       "id": "news-digest-kr",
@@ -126,7 +126,7 @@
         "korea",
         "llm"
       ],
-      "download_url": "https://raw.githubusercontent.com/kittypaw-skills/registry/main/packages/news-digest-kr"
+      "download_url": "https://raw.githubusercontent.com/kittypaw-app/skills/main/packages/news-digest-kr"
     },
     {
       "id": "stock-alert",
@@ -140,7 +140,7 @@
         "finance",
         "korea"
       ],
-      "download_url": "https://raw.githubusercontent.com/kittypaw-skills/registry/main/packages/stock-alert"
+      "download_url": "https://raw.githubusercontent.com/kittypaw-app/skills/main/packages/stock-alert"
     }
   ]
 }
