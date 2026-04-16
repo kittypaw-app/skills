@@ -14,6 +14,7 @@ cron = "0 7 * * *"
 [permissions]
 primitives = ["Http", "Llm"]
 allowed_hosts = ["api.open-meteo.com"]
+context = ["locale", "location"]
 
 [[config.fields]]
 key = "city"

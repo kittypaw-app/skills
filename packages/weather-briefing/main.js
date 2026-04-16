@@ -1,13 +1,17 @@
 // weather-briefing/main.js
 // Fetches a 7-day weather forecast from Open-Meteo (free, no API key)
-// and summarizes it with LLM.
+// and summarizes it with LLM. Language is handled by the engine via
+// context = ["locale"] — no language logic needed here.
 
 const ctx = JSON.parse(__context__);
 const config = ctx.config || {};
+const user = ctx.user || {};
 
-const city = config.city || "Seoul";
-const latitude = config.latitude || "37.57";
-const longitude = config.longitude || "126.98";
+// Location: user context > package config > defaults
+const loc = user.location || {};
+const city = loc.city || config.city || "Seoul";
+const latitude = loc.lat || parseFloat(config.latitude) || 37.57;
+const longitude = loc.lon || parseFloat(config.longitude) || 126.98;
 
 // --- Fetch forecast from Open-Meteo ---
 const forecastUrl =
@@ -37,7 +41,7 @@ const rows = dates.map((date, i) => {
 });
 const forecastTable = rows.join("\n");
 
-// Ask LLM to summarize in natural language
+// Ask LLM to summarize — engine auto-injects locale instruction
 const today = dates[0];
 const prompt =
   `Today is ${today}. The city is ${city}.\n\n` +
