@@ -1,8 +1,8 @@
 [package]
 id = "air-quality"
 name = "미세먼지 알림"
-version = "1.0.0"
-description = "매일 아침 미세먼지/초미세먼지 등급을 확인하고 알려줍니다."
+version = "2.0.0"
+description = "미세먼지/초미세먼지 등급을 확인하고 알려줍니다. (kittypaw-api OAuth 인증)"
 author = "KittyPaw Team"
 category = "health"
 tags = ["air", "dust", "health", "korea"]
@@ -13,14 +13,23 @@ cron = "0 7 * * *"
 
 [permissions]
 primitives = ["Http"]
-allowed_hosts = ["apis.data.go.kr"]
+allowed_hosts = ["localhost", "127.0.0.1", "api.kittypaw.app"]
+context = ["locale"]
 
 [[config.fields]]
-key = "api_key"
-label = "에어코리아 API 키 (data.go.kr)"
+key = "api_url"
+label = "API Server URL"
+type = "string"
+required = false
+default = "http://localhost:8080"
+source = "kittypaw-api/api_url"
+
+[[config.fields]]
+key = "access_token"
+label = "API Token"
 type = "secret"
-required = true
-hint = "data.go.kr에서 '한국환경공단_에어코리아_대기오염정보' API 키를 발급받으세요"
+required = false
+source = "kittypaw-api/access_token"
 
 [[config.fields]]
 key = "station"
