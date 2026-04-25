@@ -1,0 +1,29 @@
+[package]
+id = "exchange-rate"
+name = "환율 조회"
+version = "1.0.0"
+description = "Frankfurter (ECB 무료) API로 실시간 환율을 조회합니다. 키 불필요."
+author = "KittyPaw Team"
+category = "finance"
+tags = ["exchange", "forex", "currency", "frankfurter"]
+
+[trigger]
+type = "manual"
+
+[permissions]
+primitives = ["Http"]
+allowed_hosts = ["api.frankfurter.dev"]
+
+[[config.fields]]
+key = "base"
+label = "기준 통화 (Base Currency)"
+type = "string"
+required = false
+default = "USD"
+
+[[config.fields]]
+key = "symbols"
+label = "조회 통화 (콤마로 구분)"
+type = "string"
+required = false
+default = "KRW,EUR,JPY,CNY,GBP"

@@ -1,0 +1,22 @@
+[package]
+id = "world-time"
+name = "세계 시각"
+version = "1.0.0"
+description = "타임존별 현재 시각을 timeapi.io 에서 조회합니다. 키 불필요."
+author = "KittyPaw Team"
+category = "utility"
+tags = ["time", "timezone", "world-clock"]
+
+[trigger]
+type = "manual"
+
+[permissions]
+primitives = ["Http"]
+allowed_hosts = ["timeapi.io"]
+
+[[config.fields]]
+key = "timezone"
+label = "타임존 (IANA)"
+type = "string"
+required = false
+default = "Asia/Seoul"

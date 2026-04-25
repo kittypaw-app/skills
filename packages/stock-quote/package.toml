@@ -1,0 +1,28 @@
+[package]
+id = "stock-quote"
+name = "주가 조회"
+version = "1.0.0"
+description = "Alpha Vantage GLOBAL_QUOTE 로 주식 현재가를 즉답합니다. 알람용 stock-alert 과 별개."
+author = "KittyPaw Team"
+category = "finance"
+tags = ["stock", "quote", "alpha-vantage", "instant"]
+
+[trigger]
+type = "manual"
+
+[permissions]
+primitives = ["Http"]
+allowed_hosts = ["www.alphavantage.co"]
+
+[[config.fields]]
+key = "api_key"
+label = "Alpha Vantage API Key (무료 발급: alphavantage.co/support/#api-key)"
+type = "secret"
+required = true
+
+[[config.fields]]
+key = "default_symbol"
+label = "기본 종목 (사용자가 종목을 명시 안 했을 때)"
+type = "string"
+required = false
+default = "AAPL"

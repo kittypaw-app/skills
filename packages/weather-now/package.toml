@@ -1,0 +1,22 @@
+[package]
+id = "weather-now"
+name = "현재 날씨"
+version = "1.0.0"
+description = "wttr.in (무료, 키 불필요)으로 현재 날씨를 즉답합니다. 알람용 weather-briefing 과 별개의 즉답형 skill."
+author = "KittyPaw Team"
+category = "weather"
+tags = ["weather", "now", "wttr", "instant"]
+
+[trigger]
+type = "manual"
+
+[permissions]
+primitives = ["Http"]
+allowed_hosts = ["wttr.in"]
+
+[[config.fields]]
+key = "location"
+label = "도시 / 위치"
+type = "string"
+required = false
+default = "Seoul"

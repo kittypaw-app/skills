@@ -141,6 +141,65 @@
         "korea"
       ],
       "download_url": "https://raw.githubusercontent.com/kittypaw-app/skills/main/packages/stock-alert"
+    },
+    {
+      "id": "exchange-rate",
+      "name": "환율 조회",
+      "version": "1.0.0",
+      "description": "Frankfurter (ECB 무료) API로 실시간 환율을 조회합니다. 키 불필요.",
+      "author": "KittyPaw Team",
+      "category": "finance",
+      "tags": [
+        "exchange",
+        "forex",
+        "currency",
+        "frankfurter"
+      ],
+      "download_url": "https://raw.githubusercontent.com/kittypaw-app/skills/main/packages/exchange-rate"
+    },
+    {
+      "id": "weather-now",
+      "name": "현재 날씨",
+      "version": "1.0.0",
+      "description": "wttr.in (무료, 키 불필요)으로 현재 날씨를 즉답합니다. 알람용 weather-briefing 과 별개의 즉답형 skill.",
+      "author": "KittyPaw Team",
+      "category": "weather",
+      "tags": [
+        "weather",
+        "now",
+        "wttr",
+        "instant"
+      ],
+      "download_url": "https://raw.githubusercontent.com/kittypaw-app/skills/main/packages/weather-now"
+    },
+    {
+      "id": "world-time",
+      "name": "세계 시각",
+      "version": "1.0.0",
+      "description": "타임존별 현재 시각을 timeapi.io 에서 조회합니다. 키 불필요.",
+      "author": "KittyPaw Team",
+      "category": "utility",
+      "tags": [
+        "time",
+        "timezone",
+        "world-clock"
+      ],
+      "download_url": "https://raw.githubusercontent.com/kittypaw-app/skills/main/packages/world-time"
+    },
+    {
+      "id": "stock-quote",
+      "name": "주가 조회",
+      "version": "1.0.0",
+      "description": "Alpha Vantage GLOBAL_QUOTE 로 주식 현재가를 즉답합니다. 알람용 stock-alert 과 별개.",
+      "author": "KittyPaw Team",
+      "category": "finance",
+      "tags": [
+        "stock",
+        "quote",
+        "alpha-vantage",
+        "instant"
+      ],
+      "download_url": "https://raw.githubusercontent.com/kittypaw-app/skills/main/packages/stock-quote"
     }
   ]
 }
