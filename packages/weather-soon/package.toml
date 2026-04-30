@@ -2,6 +2,7 @@
 id = "weather-soon"
 name = "임박 예보"
 version = "0.1.0"
+license = "Elastic-2.0"
 description = "임박 미래 (1-6시간 후) 날씨 응답. 한국 좌표는 기상청 KMA 초단기예보 (30분 단위 발표, 6시간 outlook), 그 외는 wttr.in. 지금 발화는 weather-now, 오늘/내일/주간 발화는 weather-briefing."
 author = "KittyPaw Team"
 category = "weather"

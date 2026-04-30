@@ -2,6 +2,7 @@
 id = "url-monitor"
 name = "URL 모니터"
 version = "1.0.0"
+license = "Elastic-2.0"
 description = "주기적으로 URL 접속을 확인하고, 상태가 바뀌면 알려줍니다."
 author = "KittyPaw Team"
 category = "devops"

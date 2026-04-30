@@ -2,6 +2,7 @@
 id = "stock-quote"
 name = "주가 조회"
 version = "1.0.0"
+license = "Elastic-2.0"
 description = "Alpha Vantage GLOBAL_QUOTE 로 주식 현재가를 즉답합니다. 알람용 stock-alert 과 별개."
 author = "KittyPaw Team"
 category = "finance"

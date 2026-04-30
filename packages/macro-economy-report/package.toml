@@ -2,6 +2,7 @@
 id = "macro-economy-report"
 name = "매크로 경제 리포트"
 version = "1.0.0"
+license = "Elastic-2.0"
 description = "매일 주요 ETF 시장 데이터를 수집하고 LLM으로 요약합니다."
 author = "KittyPaw Team"
 category = "finance"

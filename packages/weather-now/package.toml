@@ -2,6 +2,7 @@
 id = "weather-now"
 name = "현재 날씨"
 version = "1.2.0"
+license = "Elastic-2.0"
 description = "지금 시점 (현재 / 방금 / 막) 날씨 즉답. 한국 좌표는 기상청 KMA 초단기실황, 그 외는 wttr.in. 1시간 이상 미래 발화는 weather-soon (초단기예보) 또는 weather-briefing (단기예보). 알람 / 발송용은 weather-briefing."
 author = "KittyPaw Team"
 category = "weather"

@@ -2,6 +2,7 @@
 id = "rss-digest"
 name = "RSS 뉴스 요약"
 version = "1.0.0"
+license = "Elastic-2.0"
 description = "RSS 피드에서 새 글을 가져와 LLM으로 요약합니다."
 author = "KittyPaw Team"
 category = "news"

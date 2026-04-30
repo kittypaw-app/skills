@@ -2,6 +2,7 @@
 id = "air-quality"
 name = "미세먼지 알림"
 version = "2.0.0"
+license = "Elastic-2.0"
 description = "미세먼지/초미세먼지 등급을 확인하고 알려줍니다. (kittypaw-api OAuth 인증)"
 author = "KittyPaw Team"
 category = "health"

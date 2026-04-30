@@ -2,6 +2,7 @@
 id = "world-time"
 name = "세계 시각"
 version = "1.0.0"
+license = "Elastic-2.0"
 description = "타임존별 현재 시각을 timeapi.io 에서 조회합니다. 키 불필요."
 author = "KittyPaw Team"
 category = "utility"

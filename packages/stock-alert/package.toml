@@ -2,6 +2,7 @@
 id = "stock-alert"
 name = "주식 알림"
 version = "1.0.0"
+license = "Elastic-2.0"
 description = "지정한 종목이 목표 상한가 또는 하한가를 돌파하면 즉시 알려줍니다."
 author = "KittyPaw Team"
 category = "finance"

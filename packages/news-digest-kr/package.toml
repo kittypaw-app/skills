@@ -2,6 +2,7 @@
 id = "news-digest-kr"
 name = "오늘의 뉴스 요약"
 version = "1.0.0"
+license = "Elastic-2.0"
 description = "매일 아침 구글 뉴스에서 주요 기사를 가져와 LLM으로 한 줄 요약합니다."
 author = "KittyPaw Team"
 category = "news"
