@@ -1,14 +1,27 @@
 [package]
 id = "weather-now"
 name = "현재 날씨"
-version = "1.1.0"
-description = "현재 날씨를 즉답합니다. 한국 좌표는 기상청(KMA, KittyAPI 경유), 그 외는 wttr.in. 알람용 weather-briefing 과 별개의 즉답형 skill."
+version = "1.2.0"
+description = "지금 시점 (현재 / 방금 / 막) 날씨 즉답. 한국 좌표는 기상청 KMA 초단기실황, 그 외는 wttr.in. 1시간 이상 미래 발화는 weather-soon (초단기예보) 또는 weather-briefing (단기예보). 알람 / 발송용은 weather-briefing."
 author = "KittyPaw Team"
 category = "weather"
-tags = ["weather", "now", "kma", "wttr", "instant"]
+tags = ["weather", "now", "kma", "wttr", "instant", "nowcast"]
 
 [trigger]
 type = "manual"
+
+# Forward-compatible skill discovery contract — kittypaw currently ignores
+# this section (BurntSushi/toml lenient mode). Plan 8 (Skill Discovery)
+# will surface it to the LLM so intent → skill mapping becomes explicit
+# instead of relying on description keyword guessing.
+[discovery]
+time_scope = "now"
+trigger_examples = ["지금 서울 날씨", "현재 기온", "방금 비 와?", "지금 몇 도?"]
+anti_examples = ["내일 날씨", "1시간 후 비?", "주말 날씨", "오늘 오후"]
+
+[discovery.delegates_to]
+soon = "weather-soon"
+future = "weather-briefing"
 
 [permissions]
 primitives = ["Http"]

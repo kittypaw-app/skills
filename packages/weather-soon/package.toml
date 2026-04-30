@@ -1,0 +1,48 @@
+[package]
+id = "weather-soon"
+name = "임박 예보"
+version = "0.1.0"
+description = "임박 미래 (1-6시간 후) 날씨 응답. 한국 좌표는 기상청 KMA 초단기예보 (30분 단위 발표, 6시간 outlook), 그 외는 wttr.in. 지금 발화는 weather-now, 오늘/내일/주간 발화는 weather-briefing."
+author = "KittyPaw Team"
+category = "weather"
+tags = ["weather", "soon", "kma", "imminent", "short-forecast"]
+
+[trigger]
+type = "manual"
+
+# Forward-compatible skill discovery contract — kittypaw currently ignores
+# this section. Plan 8 (Skill Discovery) will surface it to the LLM.
+[discovery]
+time_scope = "soon"
+trigger_examples = ["1시간 뒤 비?", "이따 비 와?", "오후엔 어때?", "임박 예보"]
+anti_examples = ["지금 날씨", "방금 비?", "내일", "주말 날씨"]
+
+[discovery.delegates_to]
+now = "weather-now"
+future = "weather-briefing"
+
+[permissions]
+primitives = ["Http"]
+allowed_hosts = ["wttr.in", "api.kittypaw.app"]
+context = ["location"]
+
+[[config.fields]]
+key = "location"
+label = "도시 / 위치"
+type = "string"
+required = false
+default = "Seoul"
+
+[[config.fields]]
+key = "latitude"
+label = "위도 (한국 좌표면 KMA 사용)"
+type = "string"
+required = false
+default = ""
+
+[[config.fields]]
+key = "longitude"
+label = "경도 (한국 좌표면 KMA 사용)"
+type = "string"
+required = false
+default = ""

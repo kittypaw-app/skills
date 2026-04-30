@@ -1,14 +1,15 @@
-// weather-now/main.js
-// 현재 시점 (지금 / 현재 / 방금) 날씨를 즉답합니다.
-//   - 한국 좌표 (lat∈[33,39], lon∈[124,132]): KittyAPI KMA 초단기실황
-//   - 그 외: wttr.in (도시 이름 검색)
-// 1시간 이상 미래 발화는 weather-soon (초단기예보) 또는 weather-briefing (단기예보) 로.
-// KittyAPI proxies the KMA service key — no external API key required.
+// weather-soon/main.js
+// 임박 미래 (1-6시간 후) 날씨 응답.
+//   - 한국 좌표 (lat∈[33,39], lon∈[124,132]): KittyAPI KMA 초단기예보
+//   - 그 외: wttr.in (도시 이름, 단순 fallback)
+// "지금" 발화는 weather-now, "오늘/내일/주간" 발화는 weather-briefing.
 
-// PTY codes (실황 = 관측, SKY 없음): 0=맑음/구름, 1=비, 2=비/눈, 3=눈, 5=빗방울, 6=빗방울/눈날림, 7=눈날림.
+// SKY: 1=맑음, 3=구름많음, 4=흐림.
+// PTY (예보, fcstValue): 0=없음, 1=비, 2=비/눈, 3=눈, 5=빗방울, 6=빗방울/눈날림, 7=눈날림.
 // File-top const — formatKMA 가 아래에서 참조 (TDZ 회피).
-const KMA_PTY_NCST = {
-  "0": "맑음/구름",
+const KMA_SKY = { "1": "맑음", "3": "구름많음", "4": "흐림" };
+const KMA_PTY_FCST = {
+  "0": "",
   "1": "비",
   "2": "비/눈",
   "3": "눈",
@@ -21,7 +22,6 @@ const ctx = JSON.parse(__context__);
 const config = ctx.config || {};
 const user = ctx.user || {};
 
-// Resolve coordinates: user context > package config.
 const userLoc = user.location || {};
 const lat = Number.isFinite(userLoc.lat) ? userLoc.lat : parseFloat(config.latitude);
 const lon = Number.isFinite(userLoc.lon) ? userLoc.lon : parseFloat(config.longitude);
@@ -34,18 +34,17 @@ if (isKR) {
   const apiUrl = config.api_url || "https://api.kittypaw.app";
   try {
     const raw = Http.get(
-      `${apiUrl}/v1/weather/kma/ultra-srt-ncst?lat=${lat}&lon=${lon}`,
+      `${apiUrl}/v1/weather/kma/ultra-srt-fcst?lat=${lat}&lon=${lon}`,
       { timeout_ms: 8000 }
     );
-    const cur = extractKMAFirstSlot(JSON.parse(raw), "obsrValue");
+    const cur = extractKMAFirstSlot(JSON.parse(raw), "fcstValue", it => `${it.fcstDate}${it.fcstTime}`);
     if (cur) return formatKMA(cur, userLoc.city || config.location || "현재 위치");
-    // KMA returned but envelope wasn't parseable — fall through to wttr.in.
   } catch (e) {
-    // KMA failed (network, 502, etc.) — silently fall through.
+    // KMA failed — fall through to wttr.in.
   }
 }
 
-// Fallback / non-KR path: wttr.in by city name.
+// Fallback / non-KR: wttr.in (no native "1-6h ahead" — degrades to current).
 const location = userLoc.city || config.location || "Seoul";
 const url = `https://wttr.in/${encodeURIComponent(location)}?format=j1`;
 
@@ -64,30 +63,24 @@ if (!cur) {
 }
 
 const cityName = (area && area.areaName && area.areaName[0] && area.areaName[0].value) || location;
-const tempC = cur.temp_C;
-const feelsC = cur.FeelsLikeC;
-const humidity = cur.humidity;
-const desc = (cur.weatherDesc && cur.weatherDesc[0] && cur.weatherDesc[0].value) || "";
-const wind = cur.windspeedKmph;
-const wdir = cur.winddir16Point || "";
 
 return [
-  `🌤 ${cityName} 날씨`,
+  `🌤 ${cityName} 날씨 (임박)`,
   ``,
-  `${desc}`,
-  `기온: ${tempC}°C (체감 ${feelsC}°C)`,
-  `습도: ${humidity}%`,
-  `바람: ${wind} km/h ${wdir}`,
+  `${(cur.weatherDesc && cur.weatherDesc[0] && cur.weatherDesc[0].value) || ""}`,
+  `기온: ${cur.temp_C}°C (체감 ${cur.FeelsLikeC}°C)`,
+  `습도: ${cur.humidity}%`,
+  `바람: ${cur.windspeedKmph} km/h ${cur.winddir16Point || ""}`,
   ``,
   `_Source: wttr.in · Powered by KittyPaw_`,
 ].join("\n");
 
-// --- KMA helpers (inline; Phase B will move them server-side) -----------
+// --- KMA helpers --------------------------------------------------------
 
-// extractKMAFirstSlot flattens KMA envelope items into a category-keyed map.
-// Single-slot envelope (실황 = nowcast, timeKeyFn omitted): flatten all items.
-// Multi-slot envelope (예보, timeKeyFn provided): pick the earliest slot only.
-// Identical signature in weather-soon — keeps the contract symmetric across skills.
+// extractKMAFirstSlot — same signature/shape as weather-now's helper.
+// Single-slot envelope (timeKeyFn omitted): flatten all items.
+// Multi-slot (timeKeyFn provided): pick earliest (fcstDate, fcstTime).
+// Strings are zero-padded fixed-width so lexicographic < equals time <.
 function extractKMAFirstSlot(kma, valueField, timeKeyFn) {
   const items = (kma && kma.response && kma.response.body &&
                  kma.response.body.items && kma.response.body.items.item) || [];
@@ -110,14 +103,18 @@ function extractKMAFirstSlot(kma, valueField, timeKeyFn) {
 }
 
 function formatKMA(cur, label) {
-  const desc = KMA_PTY_NCST[cur.PTY] || "—";
+  const sky = KMA_SKY[cur.SKY] || "";
+  const pty = KMA_PTY_FCST[cur.PTY] || "";
+  const desc = pty || sky || "—";
   const tmp = cur.T1H != null ? `${cur.T1H}°C` : "—";
   const reh = cur.REH != null ? `${cur.REH}%` : "—";
   const wsd = cur.WSD != null ? `${cur.WSD} m/s` : "—";
   const rn1 = (cur.RN1 != null && cur.RN1 !== "0" && cur.RN1 !== "강수없음")
     ? `${cur.RN1}` : "없음";
+  // _when = "YYYYMMDDHHMM" → "HH:MM" for display.
+  const t = cur._when ? `${cur._when.slice(8, 10)}:${cur._when.slice(10, 12)}` : "—";
   return [
-    `🌤 ${label} 현재 날씨 (KMA 실황)`,
+    `🌤 ${label} ${t} 임박 예보 (KMA 초단기)`,
     ``,
     desc,
     `기온: ${tmp}`,
@@ -125,6 +122,6 @@ function formatKMA(cur, label) {
     `바람: ${wsd}`,
     `1시간 강수: ${rn1}`,
     ``,
-    `_Source: 기상청 (KMA 실황) · Powered by KittyPaw_`,
+    `_Source: 기상청 (KMA 초단기예보) · Powered by KittyPaw_`,
   ].join("\n");
 }
