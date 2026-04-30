@@ -13,7 +13,7 @@ cron = "0 7 * * *"
 
 [permissions]
 primitives = ["Http", "Llm"]
-allowed_hosts = ["api.open-meteo.com"]
+allowed_hosts = ["api.open-meteo.com", "api.kittypaw.app"]
 context = ["locale", "location"]
 
 [[config.fields]]
