@@ -28,8 +28,6 @@ By default the check runs every 5 minutes. Alerts are sent only on state transit
 
 🕐 Checked at: 2025-03-28T09:15:00.000Z
 📋 Detail: Error: connection refused
-
-Powered by KittyPaw URL Monitor
 ```
 
 **Recovery:**
@@ -38,8 +36,6 @@ Powered by KittyPaw URL Monitor
 
 🕐 Checked at: 2025-03-28T09:20:00.000Z
 📋 Detail: Response received (1842 bytes)
-
-Powered by KittyPaw URL Monitor
 ```
 
 ## Notes

@@ -84,6 +84,6 @@ const message =
   `📰 *오늘의 뉴스 ${count}선 \\(${category}\\)*\n` +
   `_${today}_\n\n` +
   `${numbered}\n\n` +
-  `_출처: Google 뉴스 · Powered by KittyPaw_`;
+  `_출처: Google 뉴스_`;
 
 return message;

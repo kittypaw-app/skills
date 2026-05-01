@@ -19,12 +19,18 @@ const KMA_PTY_NCST = {
 
 const ctx = JSON.parse(__context__);
 const config = ctx.config || {};
+const params = ctx.params || {};
 const user = ctx.user || {};
 
-// Resolve coordinates: user context > package config.
+// Resolve coordinates: engine-provided structured params > user context > package config.
+// Natural-language parsing belongs to the KittyPaw engine/LLM layer; this
+// package only consumes structured input.
+const paramLoc = params.location || {};
 const userLoc = user.location || {};
-const lat = Number.isFinite(userLoc.lat) ? userLoc.lat : parseFloat(config.latitude);
-const lon = Number.isFinite(userLoc.lon) ? userLoc.lon : parseFloat(config.longitude);
+const loc = hasCoords(paramLoc) ? paramLoc : userLoc;
+const lat = hasCoords(loc) ? toNumber(loc.lat) : parseFloat(config.latitude);
+const lon = hasCoords(loc) ? toNumber(loc.lon) : parseFloat(config.longitude);
+const label = loc.label || loc.city || config.location || "현재 위치";
 
 const isKR =
   Number.isFinite(lat) && Number.isFinite(lon) &&
@@ -37,8 +43,9 @@ if (isKR) {
       `${apiUrl}/v1/weather/kma/ultra-srt-ncst?lat=${lat}&lon=${lon}`,
       { timeout_ms: 8000 }
     );
-    const cur = extractKMAFirstSlot(JSON.parse(raw), "obsrValue");
-    if (cur) return formatKMA(cur, userLoc.city || config.location || "현재 위치");
+    const payload = JSON.parse(raw);
+    const cur = extractKMAFirstSlot(payload, "obsrValue");
+    if (cur) return formatKMA(cur, label, payload.attribution);
     // KMA returned but envelope wasn't parseable — fall through to wttr.in.
   } catch (e) {
     // KMA failed (network, 502, etc.) — silently fall through.
@@ -46,7 +53,7 @@ if (isKR) {
 }
 
 // Fallback / non-KR path: wttr.in by city name.
-const location = userLoc.city || config.location || "Seoul";
+const location = loc.city || loc.label || config.location || "Seoul";
 const url = `https://wttr.in/${encodeURIComponent(location)}?format=j1`;
 
 let data;
@@ -63,7 +70,7 @@ if (!cur) {
   return "날씨 조회 실패: current_condition 정보가 없습니다.";
 }
 
-const cityName = (area && area.areaName && area.areaName[0] && area.areaName[0].value) || location;
+const cityName = location || (area && area.areaName && area.areaName[0] && area.areaName[0].value) || "현재 위치";
 const tempC = cur.temp_C;
 const feelsC = cur.FeelsLikeC;
 const humidity = cur.humidity;
@@ -78,11 +85,30 @@ return [
   `기온: ${tempC}°C (체감 ${feelsC}°C)`,
   `습도: ${humidity}%`,
   `바람: ${wind} km/h ${wdir}`,
-  ``,
-  `_Source: wttr.in · Powered by KittyPaw_`,
 ].join("\n");
 
 // --- KMA helpers (inline; Phase B will move them server-side) -----------
+
+function attributionLine(attribution) {
+  if (!attribution || attribution.required !== true) return "";
+  return attribution.label || attribution.name || attribution.source || "";
+}
+
+function appendAttribution(lines, attribution) {
+  const line = attributionLine(attribution);
+  if (line) lines.push("", line);
+  return lines;
+}
+
+function toNumber(value) {
+  const n = typeof value === "number" ? value : parseFloat(value);
+  return Number.isFinite(n) ? n : NaN;
+}
+
+function hasCoords(location) {
+  if (!location) return false;
+  return Number.isFinite(toNumber(location.lat)) && Number.isFinite(toNumber(location.lon));
+}
 
 // extractKMAFirstSlot flattens KMA envelope items into a category-keyed map.
 // Single-slot envelope (실황 = nowcast, timeKeyFn omitted): flatten all items.
@@ -109,22 +135,20 @@ function extractKMAFirstSlot(kma, valueField, timeKeyFn) {
   return cats;
 }
 
-function formatKMA(cur, label) {
+function formatKMA(cur, label, attribution) {
   const desc = KMA_PTY_NCST[cur.PTY] || "—";
   const tmp = cur.T1H != null ? `${cur.T1H}°C` : "—";
   const reh = cur.REH != null ? `${cur.REH}%` : "—";
   const wsd = cur.WSD != null ? `${cur.WSD} m/s` : "—";
   const rn1 = (cur.RN1 != null && cur.RN1 !== "0" && cur.RN1 !== "강수없음")
     ? `${cur.RN1}` : "없음";
-  return [
-    `🌤 ${label} 현재 날씨 (KMA 실황)`,
+  return appendAttribution([
+    `🌤 ${label} 현재 날씨`,
     ``,
     desc,
     `기온: ${tmp}`,
     `습도: ${reh}`,
     `바람: ${wsd}`,
     `1시간 강수: ${rn1}`,
-    ``,
-    `_Source: 기상청 (KMA 실황) · Powered by KittyPaw_`,
-  ].join("\n");
+  ], attribution).join("\n");
 }

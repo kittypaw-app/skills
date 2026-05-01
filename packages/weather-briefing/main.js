@@ -58,6 +58,7 @@ try {
 // {dates, maxTemps, minTemps, precip} shape used below.
 if (kmaRaw !== null) {
   const today = new Date().toISOString().slice(0, 10);
+  const kmaAttribution = attributionFromPayload(kmaRaw);
   const kmaPrompt =
     `Today is ${today}. The city is ${city}.\n\n` +
     `Korea KMA village forecast (raw envelope; parse response.body.items.item — ` +
@@ -73,14 +74,14 @@ if (kmaRaw !== null) {
   } catch (e) {
     kmaSummary = "(LLM summary unavailable)";
   }
-  return [
+  const lines = [
     `🌤 *Weather Briefing — ${city} (${today})*`,
     ``,
     `*Summary*`,
     kmaSummary,
-    ``,
-    `_Data: 기상청 (KMA, fallback) · Powered by KittyPaw_`,
-  ].join("\n");
+  ];
+  appendAttribution(lines, kmaAttribution);
+  return lines.join("\n");
 }
 
 const daily = forecast.daily;
@@ -126,7 +127,21 @@ const lines = [
   `*Summary*`,
   summary,
   ``,
-  `_Data: Open-Meteo · Powered by KittyPaw_`,
+  `Weather data by Open-Meteo.com (https://open-meteo.com)`,
 ];
 
 return lines.join("\n");
+
+function attributionFromPayload(raw) {
+  try {
+    return JSON.parse(raw).attribution || null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function appendAttribution(lines, attribution) {
+  if (!attribution || attribution.required !== true) return;
+  const label = attribution.label || attribution.name || attribution.source || "";
+  if (label) lines.push("", label);
+}

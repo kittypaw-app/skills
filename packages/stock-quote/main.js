@@ -48,5 +48,5 @@ return [
   `고가: $${high}  /  저가: $${low}`,
   `거래량: ${volume}`,
   ``,
-  `_Source: Alpha Vantage · Powered by KittyPaw_`,
+  `_Source: Alpha Vantage_`,
 ].join("\n");

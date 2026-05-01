@@ -110,8 +110,6 @@ const lines = [
   ``,
   `*Links*`,
   ...toProcess.map((item, i) => `${i + 1}. [${item.title.slice(0, 60)}](${item.link})`),
-  ``,
-  `_Powered by KittyPaw_`,
 ];
 const message = lines.join("\n");
 

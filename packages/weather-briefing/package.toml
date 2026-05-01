@@ -1,9 +1,9 @@
 [package]
 id = "weather-briefing"
-name = "날씨 브리핑"
-version = "1.0.0"
+name = "매일 아침 날씨 브리핑"
+version = "1.0.1"
 license = "Elastic-2.0"
-description = "매일 아침 설정한 도시의 날씨 예보를 가져와 자연어로 브리핑해줍니다."
+description = "매일 아침 설정한 지역의 날씨 예보를 요약해서 텔레그램으로 보내줍니다. 지금/현재 날씨 즉답은 weather-now를 사용하세요."
 author = "KittyPaw Team"
 category = "weather"
 tags = ["weather", "daily", "llm", "open-meteo"]
@@ -16,6 +16,23 @@ cron = "0 7 * * *"
 primitives = ["Http", "Llm"]
 allowed_hosts = ["api.open-meteo.com", "api.kittypaw.app"]
 context = ["locale", "location"]
+
+[attribution]
+policy = "required-only"
+
+[[attribution.providers]]
+id = "open-meteo"
+name = "Open-Meteo"
+label = "Weather data by Open-Meteo.com"
+url = "https://open-meteo.com"
+required = true
+
+[[attribution.providers]]
+id = "kma"
+name = "KMA"
+label = "Weather data by KMA"
+url = "https://apihub.kma.go.kr"
+required = false
 
 [[config.fields]]
 key = "city"

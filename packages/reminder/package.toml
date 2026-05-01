@@ -1,7 +1,7 @@
 [package]
 id = "reminder"
 name = "리마인더"
-version = "1.0.0"
+version = "1.0.1"
 license = "Elastic-2.0"
 description = "키워드로 할 일을 추가하고, 목록을 보고, 완료 처리할 수 있는 리마인더입니다."
 author = "KittyPaw Team"
@@ -11,6 +11,46 @@ tags = ["reminder", "storage", "productivity", "keyword"]
 [trigger]
 type = "keyword"
 keyword = "remind"
+
+[discovery]
+time_scope = "now"
+trigger_examples = ["리마인더 추가", "할 일 기억해줘", "리마인더 목록", "1번 완료"]
+anti_examples = ["일정 알림 예약", "캘린더 초대"]
+
+[invocation]
+execution_model = "deterministic"
+caller_responsibilities = [
+  "Extract the reminder operation into ctx.params.action before calling.",
+  "For add, pass ctx.params.text. For done, pass ctx.params.id. For list/clear, no extra fields are required.",
+  "Do not ask the package to parse raw user text.",
+]
+missing_slot_policy = "If action, text, or id is required and missing, clarify before calling or return the package's missing-input message."
+postprocess = "The caller may rephrase success messages, but must preserve reminder ids and stored text."
+
+[[invocation.inputs]]
+key = "action"
+path = "ctx.params.action"
+type = "string"
+required = true
+resolver = "engine"
+fields = ["add", "list", "done", "clear"]
+description = "Reminder operation to execute."
+
+[[invocation.inputs]]
+key = "text"
+path = "ctx.params.text"
+type = "string"
+required = false
+resolver = "engine"
+description = "Reminder text for action=add."
+
+[[invocation.inputs]]
+key = "id"
+path = "ctx.params.id"
+type = "number"
+required = false
+resolver = "engine"
+description = "Reminder id for action=done."
 
 [permissions]
 primitives = ["Storage"]

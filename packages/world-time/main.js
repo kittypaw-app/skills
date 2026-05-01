@@ -31,5 +31,5 @@ return [
   ``,
   `${date} ${time}${day ? " (" + day + ")" : ""}${dst}`,
   ``,
-  `_Source: timeapi.io · Powered by KittyPaw_`,
+  `_Source: timeapi.io_`,
 ].join("\n");

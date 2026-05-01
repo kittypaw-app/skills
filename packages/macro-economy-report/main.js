@@ -78,7 +78,7 @@ const lines = [
   `*Commentary*`,
   commentary,
   ``,
-  `_Data: Yahoo Finance · Powered by KittyPaw_`,
+  `_Data: Yahoo Finance_`,
 ];
 const message = lines.join("\n");
 

@@ -1,20 +1,17 @@
 // reminder/main.js
-// Keyword-triggered reminder manager.
-// Commands (all case-insensitive):
-//   "remind <text>"    — add a reminder
-//   "list" / "목록"    — list all active reminders
-//   "done <n>" / "완료 <n>" — mark reminder #n as done
-//   "clear"            — remove all completed reminders
-// Responds via return value (no Telegram — designed for GUI chat).
+// Deterministic reminder manager.
+// Natural-language understanding belongs to the engine/LLM caller, which must
+// pass structured params:
+//   {action:"add", text:"buy groceries"}
+//   {action:"list"}
+//   {action:"done", id:1}
+//   {action:"clear"}
 
 const ctx = JSON.parse(__context__);
-// The triggering message is available on the context
-const message = ((ctx.message && ctx.message.text) || ctx.input || "").trim();
+const params = ctx.params || {};
 
 const STORAGE_KEY = "reminders";
 
-// --- Load reminders from Storage ---
-// Each reminder: { id, text, done, createdAt }
 async function loadReminders() {
   try {
     const raw = await Storage.get(STORAGE_KEY);
@@ -27,69 +24,69 @@ async function loadReminders() {
   }
 }
 
-// --- Save reminders to Storage ---
 async function saveReminders(reminders) {
   await Storage.set(STORAGE_KEY, JSON.stringify(reminders));
 }
 
-// --- Generate a simple auto-increment ID ---
 function nextId(reminders) {
   if (reminders.length === 0) return 1;
   return Math.max(...reminders.map(r => r.id)) + 1;
 }
 
-// --- Format reminder list for display ---
 function formatList(reminders) {
   const active = reminders.filter(r => !r.done);
   const done = reminders.filter(r => r.done);
-  if (reminders.length === 0) return "No reminders yet. Say: remind <something>";
+  if (reminders.length === 0) return "저장된 리마인더가 없습니다.";
 
-  const lines = ["📋 Your Reminders\n"];
+  const lines = ["📋 리마인더\n"];
   if (active.length > 0) {
-    lines.push("Active:");
+    lines.push("진행 중:");
     active.forEach(r => lines.push(`  [${r.id}] ${r.text}  (${r.createdAt})`));
   }
   if (done.length > 0) {
-    lines.push("\nCompleted:");
+    lines.push("\n완료:");
     done.forEach(r => lines.push(`  [${r.id}] ✓ ${r.text}`));
   }
   return lines.join("\n");
 }
 
-// --- Parse command ---
-const lower = message.toLowerCase();
+function normalizedAction(value) {
+  const action = String(value || "").trim().toLowerCase();
+  if (action === "create") return "add";
+  if (action === "complete") return "done";
+  return action;
+}
+
+const action = normalizedAction(params.action);
 let reminders = await loadReminders();
 
-// LIST
-if (lower === "list" || lower === "목록" || lower === "reminders") {
+if (action === "list") {
   return formatList(reminders);
 }
 
-// CLEAR completed
-if (lower === "clear") {
+if (action === "clear") {
   const before = reminders.length;
   reminders = reminders.filter(r => !r.done);
   await saveReminders(reminders);
   const removed = before - reminders.length;
-  return `Cleared ${removed} completed reminder(s). ${reminders.length} active remaining.`;
+  return `완료된 리마인더 ${removed}개를 정리했습니다. 진행 중 ${reminders.length}개가 남아 있습니다.`;
 }
 
-// DONE <n> or 완료 <n>
-const doneMatch = message.match(/^(?:done|완료)\s+(\d+)$/i);
-if (doneMatch) {
-  const id = parseInt(doneMatch[1], 10);
+if (action === "done") {
+  const id = Number(params.id);
+  if (!Number.isInteger(id) || id <= 0) {
+    return "완료 처리할 리마인더 id가 필요합니다.";
+  }
   const idx = reminders.findIndex(r => r.id === id);
-  if (idx === -1) return `Reminder #${id} not found.`;
+  if (idx === -1) return `#${id} 리마인더를 찾지 못했습니다.`;
   reminders[idx].done = true;
   await saveReminders(reminders);
-  return `✅ Marked reminder #${id} as done: "${reminders[idx].text}"`;
+  return `✅ #${id} 완료 처리했습니다: "${reminders[idx].text}"`;
 }
 
-// REMIND <text> or 알림 <text>
-const remindMatch = message.match(/^(?:remind(?:er)?|알림)\s+(.+)$/i);
-if (remindMatch) {
-  const text = remindMatch[1].trim();
-  if (!text) return "Please provide a reminder text. Example: remind buy groceries";
+if (action === "add") {
+  const text = String(params.text || "").trim();
+  if (!text) return "추가할 리마인더 내용이 필요합니다.";
   const newReminder = {
     id: nextId(reminders),
     text,
@@ -98,16 +95,7 @@ if (remindMatch) {
   };
   reminders.push(newReminder);
   await saveReminders(reminders);
-  return `✏️ Reminder #${newReminder.id} saved: "${text}"\n\nSay "list" to see all reminders.`;
+  return `✏️ #${newReminder.id} 리마인더를 저장했습니다: "${text}"`;
 }
 
-// Fallback: show help
-return [
-  "Reminder Commands:",
-  "  remind <text>    — add a new reminder",
-  "  list             — show all reminders",
-  "  done <n>         — mark reminder #n as done",
-  "  clear            — remove completed reminders",
-  "",
-  `You said: "${message}"`,
-].join("\n");
+return "리마인더 작업을 실행하려면 action 파라미터가 필요합니다. 가능한 action: add, list, done, clear.";

@@ -1,7 +1,7 @@
 [package]
 id = "exchange-rate"
 name = "환율 조회"
-version = "1.0.0"
+version = "1.0.2"
 license = "Elastic-2.0"
 description = "Frankfurter (ECB 무료) API로 실시간 환율을 조회합니다. 키 불필요."
 author = "KittyPaw Team"
@@ -10,6 +10,48 @@ tags = ["exchange", "forex", "currency", "frankfurter"]
 
 [trigger]
 type = "manual"
+
+[discovery]
+time_scope = "now"
+trigger_examples = ["달러 환율", "USD/KRW", "원화 기준 환율", "엔화 환율"]
+anti_examples = ["주가", "코인 가격", "물가"]
+
+[invocation]
+execution_model = "deterministic"
+caller_responsibilities = [
+  "Extract requested base/target currencies before calling when the user names them.",
+  "If the package output uses a different base than the user requested, rebase with deterministic arithmetic before answering.",
+  "Do not replace package output with web-search links when this package is installed and applicable.",
+]
+missing_slot_policy = "Use configured base and symbols only when the user did not name a currency pair."
+postprocess = "The caller may reformat or rebase rates with arithmetic, but must preserve package date and numeric rates."
+
+[[invocation.inputs]]
+key = "base"
+path = "ctx.params.base"
+type = "string"
+required = false
+resolver = "engine"
+description = "ISO currency code to use as the base currency when inferred from the user query."
+
+[[invocation.inputs]]
+key = "symbols"
+path = "ctx.params.symbols"
+type = "array"
+required = false
+resolver = "engine"
+fields = ["ISO currency codes"]
+description = "Target currency codes requested by the user."
+
+[attribution]
+policy = "required-only"
+
+[[attribution.providers]]
+id = "frankfurter"
+name = "Frankfurter"
+label = "Exchange-rate data by Frankfurter"
+url = "https://frankfurter.dev"
+required = false
 
 [permissions]
 primitives = ["Http"]

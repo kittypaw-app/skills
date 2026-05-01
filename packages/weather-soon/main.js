@@ -20,11 +20,15 @@ const KMA_PTY_FCST = {
 
 const ctx = JSON.parse(__context__);
 const config = ctx.config || {};
+const params = ctx.params || {};
 const user = ctx.user || {};
 
+const paramLoc = params.location || {};
 const userLoc = user.location || {};
-const lat = Number.isFinite(userLoc.lat) ? userLoc.lat : parseFloat(config.latitude);
-const lon = Number.isFinite(userLoc.lon) ? userLoc.lon : parseFloat(config.longitude);
+const loc = hasCoords(paramLoc) ? paramLoc : userLoc;
+const lat = hasCoords(loc) ? toNumber(loc.lat) : parseFloat(config.latitude);
+const lon = hasCoords(loc) ? toNumber(loc.lon) : parseFloat(config.longitude);
+const label = loc.label || loc.city || config.location || "현재 위치";
 
 const isKR =
   Number.isFinite(lat) && Number.isFinite(lon) &&
@@ -37,15 +41,16 @@ if (isKR) {
       `${apiUrl}/v1/weather/kma/ultra-srt-fcst?lat=${lat}&lon=${lon}`,
       { timeout_ms: 8000 }
     );
-    const cur = extractKMAFirstSlot(JSON.parse(raw), "fcstValue", it => `${it.fcstDate}${it.fcstTime}`);
-    if (cur) return formatKMA(cur, userLoc.city || config.location || "현재 위치");
+    const payload = JSON.parse(raw);
+    const cur = extractKMAFirstSlot(payload, "fcstValue", it => `${it.fcstDate}${it.fcstTime}`);
+    if (cur) return formatKMA(cur, label, payload.attribution);
   } catch (e) {
     // KMA failed — fall through to wttr.in.
   }
 }
 
 // Fallback / non-KR: wttr.in (no native "1-6h ahead" — degrades to current).
-const location = userLoc.city || config.location || "Seoul";
+const location = loc.city || loc.label || config.location || "Seoul";
 const url = `https://wttr.in/${encodeURIComponent(location)}?format=j1`;
 
 let data;
@@ -62,7 +67,7 @@ if (!cur) {
   return "날씨 조회 실패: current_condition 정보가 없습니다.";
 }
 
-const cityName = (area && area.areaName && area.areaName[0] && area.areaName[0].value) || location;
+const cityName = location || (area && area.areaName && area.areaName[0] && area.areaName[0].value) || "현재 위치";
 
 return [
   `🌤 ${cityName} 날씨 (임박)`,
@@ -71,11 +76,30 @@ return [
   `기온: ${cur.temp_C}°C (체감 ${cur.FeelsLikeC}°C)`,
   `습도: ${cur.humidity}%`,
   `바람: ${cur.windspeedKmph} km/h ${cur.winddir16Point || ""}`,
-  ``,
-  `_Source: wttr.in · Powered by KittyPaw_`,
 ].join("\n");
 
 // --- KMA helpers --------------------------------------------------------
+
+function attributionLine(attribution) {
+  if (!attribution || attribution.required !== true) return "";
+  return attribution.label || attribution.name || attribution.source || "";
+}
+
+function appendAttribution(lines, attribution) {
+  const line = attributionLine(attribution);
+  if (line) lines.push("", line);
+  return lines;
+}
+
+function toNumber(value) {
+  const n = typeof value === "number" ? value : parseFloat(value);
+  return Number.isFinite(n) ? n : NaN;
+}
+
+function hasCoords(location) {
+  if (!location) return false;
+  return Number.isFinite(toNumber(location.lat)) && Number.isFinite(toNumber(location.lon));
+}
 
 // extractKMAFirstSlot — same signature/shape as weather-now's helper.
 // Single-slot envelope (timeKeyFn omitted): flatten all items.
@@ -102,7 +126,7 @@ function extractKMAFirstSlot(kma, valueField, timeKeyFn) {
   return cats;
 }
 
-function formatKMA(cur, label) {
+function formatKMA(cur, label, attribution) {
   const sky = KMA_SKY[cur.SKY] || "";
   const pty = KMA_PTY_FCST[cur.PTY] || "";
   const desc = pty || sky || "—";
@@ -113,15 +137,13 @@ function formatKMA(cur, label) {
     ? `${cur.RN1}` : "없음";
   // _when = "YYYYMMDDHHMM" → "HH:MM" for display.
   const t = cur._when ? `${cur._when.slice(8, 10)}:${cur._when.slice(10, 12)}` : "—";
-  return [
-    `🌤 ${label} ${t} 임박 예보 (KMA 초단기)`,
+  return appendAttribution([
+    `🌤 ${label} ${t} 임박 예보`,
     ``,
     desc,
     `기온: ${tmp}`,
     `습도: ${reh}`,
     `바람: ${wsd}`,
     `1시간 강수: ${rn1}`,
-    ``,
-    `_Source: 기상청 (KMA 초단기예보) · Powered by KittyPaw_`,
-  ].join("\n");
+  ], attribution).join("\n");
 }

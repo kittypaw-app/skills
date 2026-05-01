@@ -85,8 +85,6 @@ if (statusChanged || isFirstCheck) {
     ``,
     `🕐 Checked at: ${now}`,
     `📋 Detail: ${detail}`,
-    ``,
-    `_Powered by KittyPaw URL Monitor_`,
   ].join("\n");
 
   return message;

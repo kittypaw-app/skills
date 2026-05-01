@@ -58,7 +58,7 @@ const message = [
   ``,
   tip,
   ``,
-  `_출처: 에어코리아 · Powered by KittyPaw_`,
+  `_출처: 에어코리아_`,
 ].join("\n");
 
 return message;

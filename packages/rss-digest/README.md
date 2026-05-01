@@ -38,8 +38,6 @@ Links
 1. Show HN: Compact Transformer for Edge Devices
 2. Cloudflare Expands Free Tier with DDoS Protection
 3. 10 Years of Rust at Mozilla
-
-Powered by KittyPaw
 ```
 
 ## Data Source

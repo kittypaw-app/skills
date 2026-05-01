@@ -1,7 +1,7 @@
 [package]
 id = "weather-soon"
-name = "임박 예보"
-version = "0.1.0"
+name = "몇 시간 뒤 날씨 예보"
+version = "0.1.2"
 license = "Elastic-2.0"
 description = "임박 미래 (1-6시간 후) 날씨 응답. 한국 좌표는 기상청 KMA 초단기예보 (30분 단위 발표, 6시간 outlook), 그 외는 wttr.in. 지금 발화는 weather-now, 오늘/내일/주간 발화는 weather-briefing."
 author = "KittyPaw Team"
@@ -21,6 +21,54 @@ anti_examples = ["지금 날씨", "방금 비?", "내일", "주말 날씨"]
 [discovery.delegates_to]
 now = "weather-now"
 future = "weather-briefing"
+
+[capabilities.location]
+accepts = ["coord", "natural_poi", "city"]
+resolution = "engine"
+
+[invocation]
+execution_model = "deterministic"
+caller_responsibilities = [
+  "Use this package only for imminent weather questions, roughly 1-6 hours ahead.",
+  "Extract explicit place mentions into ctx.params.location; do not ask the package to parse raw user text.",
+  "Route current-weather questions to weather-now and daily/future forecast questions to weather-briefing.",
+]
+missing_slot_policy = "Use ctx.user.location or config.location only when the user did not explicitly name a place."
+postprocess = "The caller may rephrase package output, but must preserve time scope and weather facts from the package output."
+
+[[invocation.inputs]]
+key = "location"
+path = "ctx.params.location"
+type = "object"
+required = false
+resolver = "engine"
+fields = ["label", "lat", "lon"]
+description = "Resolved location for the imminent forecast question."
+
+[[invocation.inputs]]
+key = "time_scope"
+path = "ctx.params.time_scope"
+type = "string"
+required = false
+resolver = "engine"
+description = "Imminent forecast scope, such as 1h, 3h, or this-afternoon, when the caller can infer it."
+
+[attribution]
+policy = "required-only"
+
+[[attribution.providers]]
+id = "kma"
+name = "KMA"
+label = "Weather data by KMA"
+url = "https://apihub.kma.go.kr"
+required = false
+
+[[attribution.providers]]
+id = "wttr"
+name = "wttr.in"
+label = "Weather data by wttr.in"
+url = "https://wttr.in"
+required = false
 
 [permissions]
 primitives = ["Http"]

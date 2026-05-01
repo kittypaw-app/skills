@@ -3,9 +3,9 @@
   "packages": [
     {
       "id": "weather-briefing",
-      "name": "아침 날씨 요약",
+      "name": "매일 아침 날씨 브리핑",
       "version": "1.0.0",
-      "description": "매일 아침 날씨를 확인하고 텔레그램으로 보내줍니다.",
+      "description": "매일 아침 설정한 지역의 날씨 예보를 요약해서 텔레그램으로 보내줍니다. 지금/현재 날씨 즉답은 '현재 날씨' 스킬을 사용하세요.",
       "author": "KittyPaw Team",
       "category": "weather",
       "tags": [
@@ -62,8 +62,8 @@
     {
       "id": "reminder",
       "name": "리마인더",
-      "version": "1.0.0",
-      "description": "키워드로 리마인더를 설정하고 관리합니다.",
+      "version": "1.0.1",
+      "description": "구조화된 action/text/id 입력으로 리마인더를 추가, 목록 조회, 완료, 정리합니다.",
       "author": "KittyPaw Team",
       "category": "productivity",
       "tags": [
@@ -145,7 +145,7 @@
     {
       "id": "exchange-rate",
       "name": "환율 조회",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "Frankfurter (ECB 무료) API로 실시간 환율을 조회합니다. 키 불필요.",
       "author": "KittyPaw Team",
       "category": "finance",
@@ -160,17 +160,33 @@
     {
       "id": "weather-now",
       "name": "현재 날씨",
-      "version": "1.0.0",
-      "description": "wttr.in (무료, 키 불필요)으로 현재 날씨를 즉답합니다. 알람용 weather-briefing 과 별개의 즉답형 skill.",
+      "version": "1.2.1",
+      "description": "지금 시점(현재/방금/막) 날씨와 비 여부를 즉답합니다. 한국 좌표는 기상청 KMA 초단기실황, 그 외는 wttr.in을 사용합니다. 알람/정기 발송은 '매일 아침 날씨 브리핑' 스킬을 사용하세요.",
       "author": "KittyPaw Team",
       "category": "weather",
       "tags": [
         "weather",
         "now",
+        "kma",
         "wttr",
         "instant"
       ],
       "download_url": "https://raw.githubusercontent.com/kittypaw-app/skills/main/packages/weather-now"
+    },
+    {
+      "id": "weather-soon",
+      "name": "몇 시간 뒤 날씨 예보",
+      "version": "0.1.1",
+      "description": "1-6시간 뒤처럼 임박한 미래 날씨를 답합니다. 한국 좌표는 기상청 KMA 초단기예보를 사용합니다. 지금 날씨는 '현재 날씨', 매일 아침 알림은 '매일 아침 날씨 브리핑'을 사용하세요.",
+      "author": "KittyPaw Team",
+      "category": "weather",
+      "tags": [
+        "weather",
+        "soon",
+        "kma",
+        "forecast"
+      ],
+      "download_url": "https://raw.githubusercontent.com/kittypaw-app/skills/main/packages/weather-soon"
     },
     {
       "id": "world-time",
