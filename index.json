@@ -205,14 +205,15 @@
     {
       "id": "stock-quote",
       "name": "주가 조회",
-      "version": "1.0.0",
-      "description": "Alpha Vantage GLOBAL_QUOTE 로 주식 현재가를 즉답합니다. 알람용 stock-alert 과 별개.",
+      "version": "1.1.0",
+      "description": "네이버 증권에서 한국 주식 현재가를 즉답합니다. 종목명/6자리 종목코드를 지원하며 API 키가 필요 없습니다.",
       "author": "KittyPaw Team",
       "category": "finance",
       "tags": [
         "stock",
         "quote",
-        "alpha-vantage",
+        "naver-finance",
+        "korea",
         "instant"
       ],
       "download_url": "https://raw.githubusercontent.com/kittypaw-app/skills/main/packages/stock-quote"

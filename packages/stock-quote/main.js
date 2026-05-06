@@ -1,52 +1,99 @@
 // stock-quote/main.js
-// Fetches current stock quote via Alpha Vantage GLOBAL_QUOTE endpoint.
-// Free tier: 25 requests/day, 5 requests/min. API key required.
+// Fetches current Korean stock quotes from Naver Securities.
+// No external API key is required for the default KRX/KOSPI/KOSDAQ path.
 
 const ctx = JSON.parse(__context__);
 const config = ctx.config || {};
+const params = ctx.params || {};
 
-const apiKey = config.api_key;
-if (!apiKey) {
-  return "Alpha Vantage API key 가 설정되지 않았습니다. `kittypaw setup` 또는 config.toml 에서 stock-quote.api_key 를 입력하세요.";
+const query = String(params.symbol || params.stock || params.query || config.default_symbol || "005930").trim();
+if (!query) return "조회할 종목명 또는 6자리 종목코드를 알려주세요. 예: 삼성전자, 005930";
+
+let resolved;
+try {
+  resolved = resolveKoreanStock(query);
+} catch (e) {
+  return `종목 검색 실패: ${e}`;
 }
-
-const symbol = (config.default_symbol || "AAPL").toUpperCase();
-const url =
-  `https://www.alphavantage.co/query?function=GLOBAL_QUOTE` +
-  `&symbol=${encodeURIComponent(symbol)}` +
-  `&apikey=${encodeURIComponent(apiKey)}`;
+if (!resolved || !resolved.code) {
+  return `종목을 찾지 못했어요: ${query}. 종목명이나 6자리 종목코드로 다시 알려주세요.`;
+}
 
 let data;
 try {
-  const raw = Http.get(url);
+  const raw = Http.get(`https://m.stock.naver.com/api/stock/${resolved.code}/basic`);
   data = JSON.parse(raw);
 } catch (e) {
   return `주가 조회 실패: ${e}`;
 }
 
-const quote = data && data["Global Quote"];
-if (!quote || !quote["05. price"]) {
-  // Alpha Vantage rate-limit / invalid-key 응답이 200 OK 본문에 들어옴
-  if (data && data["Note"]) return `주가 조회 제한: ${data["Note"]}`;
-  if (data && data["Error Message"]) return `주가 조회 실패: ${data["Error Message"]}`;
-  return `주가 조회 실패: '${symbol}' 응답에 시세가 없습니다.`;
+const code = data.itemCode || resolved.code;
+const name = data.stockName || resolved.name || query;
+const price = data.closePrice || data.currentPrice;
+if (!price) {
+  return `주가 조회 실패: ${name}(${code}) 응답에 현재가가 없습니다.`;
 }
 
-const price = parseFloat(quote["05. price"]).toFixed(2);
-const change = quote["09. change"];
-const changePct = quote["10. change percent"];
-const high = quote["03. high"];
-const low = quote["04. low"];
-const volume = parseInt(quote["06. volume"], 10).toLocaleString();
-const day = quote["07. latest trading day"];
-const arrow = parseFloat(change) >= 0 ? "▲" : "▼";
+const change = data.compareToPreviousClosePrice || "0";
+const changePct = data.fluctuationsRatio || "0";
+const direction = data.compareToPreviousPrice || {};
+const arrow = direction.text === "하락" || direction.code === "5" ? "▼" :
+  direction.text === "상승" || direction.code === "2" ? "▲" : "-";
+const market = data.stockExchangeName || resolved.market || "";
+const status = formatMarketStatus(data.marketStatus);
+const tradedAt = formatKoreanDateTime(data.localTradedAt);
 
-return [
-  `💹 ${symbol} 현재가 (${day})`,
+const lines = [
+  `💹 ${name}(${code}) 현재가`,
   ``,
-  `${arrow} $${price} (${change}, ${changePct})`,
-  `고가: $${high}  /  저가: $${low}`,
-  `거래량: ${volume}`,
+  `현재가: ${price}원`,
+  `전일대비: ${arrow} ${change}원 (${changePct}%)`,
+];
+const marketLine = [market, status].filter(Boolean).join(" / ");
+if (marketLine) lines.push(marketLine);
+if (tradedAt) lines.push(`기준: ${tradedAt}`);
+lines.push(
   ``,
-  `_Source: Alpha Vantage_`,
-].join("\n");
+  `_Source: 네이버 증권_`,
+);
+
+return lines.join("\n");
+
+function resolveKoreanStock(input) {
+  const normalized = input.toUpperCase().replace(/\.(KS|KQ)$/i, "");
+  if (/^\d{6}$/.test(normalized)) return { code: normalized, name: normalized };
+
+  const raw = Http.get(`https://ac.stock.naver.com/ac?q=${encodeURIComponent(input)}&target=stock`);
+  const payload = JSON.parse(raw);
+  const items = Array.isArray(payload.items) ? payload.items : [];
+  const exact = items.find(item => isKoreanStock(item) && item.name === input);
+  const first = exact || items.find(isKoreanStock);
+  if (!first) return null;
+  return {
+    code: first.code,
+    name: first.name,
+    market: first.typeName || first.typeCode || "",
+  };
+}
+
+function isKoreanStock(item) {
+  return item && item.nationCode === "KOR" && /^\d{6}$/.test(String(item.code || ""));
+}
+
+function formatKoreanDateTime(value) {
+  if (!value) return "";
+  return String(value).replace("T", " ").replace(/\+09:00$/, "");
+}
+
+function formatMarketStatus(value) {
+  switch (value) {
+    case "OPEN":
+      return "장중";
+    case "CLOSE":
+      return "장마감";
+    case "BEFORE":
+      return "장전";
+    default:
+      return value || "";
+  }
+}

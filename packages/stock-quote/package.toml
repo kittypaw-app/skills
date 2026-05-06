@@ -1,29 +1,39 @@
 [package]
 id = "stock-quote"
 name = "주가 조회"
-version = "1.0.0"
+version = "1.1.0"
 license = "Elastic-2.0"
-description = "Alpha Vantage GLOBAL_QUOTE 로 주식 현재가를 즉답합니다. 알람용 stock-alert 과 별개."
+description = "네이버 증권에서 한국 주식 현재가를 즉답합니다. 종목명/6자리 종목코드를 지원하며 API 키가 필요 없습니다."
 author = "KittyPaw Team"
 category = "finance"
-tags = ["stock", "quote", "alpha-vantage", "instant"]
+tags = ["stock", "quote", "naver-finance", "korea", "instant"]
 
 [trigger]
 type = "manual"
 
 [permissions]
 primitives = ["Http"]
-allowed_hosts = ["www.alphavantage.co"]
+allowed_hosts = ["ac.stock.naver.com", "m.stock.naver.com"]
 
-[[config.fields]]
-key = "api_key"
-label = "Alpha Vantage API Key (무료 발급: alphavantage.co/support/#api-key)"
-type = "secret"
-required = true
+[invocation]
+execution_model = "deterministic"
+caller_responsibilities = [
+  "Extract the stock name, 6-digit Korean stock code, or ticker-like input into ctx.params.symbol.",
+  "For broad market questions such as '주식 어때?', clarify whether the user wants a specific stock, index, or news summary before calling this package.",
+]
+missing_slot_policy = "Use config.default_symbol only when the user did not name a stock."
+postprocess = "The caller may rephrase the package output for tone, but must not invent prices or investment advice."
+
+[[invocation.inputs]]
+key = "symbol"
+path = "ctx.params.symbol"
+type = "string"
+required = false
+description = "Korean stock name or 6-digit code, e.g. 삼성전자 or 005930."
 
 [[config.fields]]
 key = "default_symbol"
-label = "기본 종목 (사용자가 종목을 명시 안 했을 때)"
+label = "기본 종목명 또는 6자리 종목코드"
 type = "string"
 required = false
-default = "AAPL"
+default = "005930"
