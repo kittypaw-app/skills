@@ -2,29 +2,18 @@ const ctx = JSON.parse(__context__);
 const config = ctx.config || {};
 
 const apiURL = config.api_url || "https://api.kittypaw.app";
-const token = config.access_token || "";
 const station = config.station || "종로구";
 
-if (!token) {
-  return [
-    "로그인이 필요합니다. 터미널에서 다음 명령어를 실행하세요:",
-    "",
-    `  kittypaw login --api-url ${apiURL}`,
-    "",
-    "로그인 후 다시 시도해주세요.",
-  ].join("\n");
-}
-
-const url = `${apiURL}/api/v1/airkorea?station=${encodeURIComponent(station)}`;
+const url =
+  `${apiURL}/v1/air/airkorea/realtime/station` +
+  `?stationName=${encodeURIComponent(station)}` +
+  `&dataTerm=DAILY`;
 
 let data;
 try {
-  const raw = await Http.get(url, { headers: { "Authorization": `Bearer ${token}` } });
+  const raw = await Http.get(url);
   data = JSON.parse(raw);
 } catch (e) {
-  if (String(e).indexOf("401") !== -1 || String(e).indexOf("403") !== -1) {
-    return `인증이 만료되었습니다. 다시 로그인하세요:\n\n  kittypaw login --api-url ${apiURL}`;
-  }
   return `대기질 조회 실패: ${e}`;
 }
 
@@ -32,7 +21,13 @@ if (data.error) {
   return `API 오류: ${data.error}`;
 }
 
-const items = data.items || data.data || [data];
+const header = data.response && data.response.header;
+if (header && header.resultCode && header.resultCode !== "00") {
+  return `API 오류: ${header.resultMsg || header.resultCode}`;
+}
+
+const body = data.response && data.response.body;
+const items = data.items || data.data || (body && body.items) || [data];
 if (!items || items.length === 0) {
   return `${station} 측정소의 데이터가 없습니다.`;
 }

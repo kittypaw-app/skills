@@ -4,10 +4,9 @@
 
 ## 설정
 
-kittypaw-api 서버 연동 방식입니다 (API 키 직접 발급 불필요).
+KittyAPI AirKorea 프록시 연동 방식입니다. AirKorea API 키는 `api.kittypaw.app` 서버가 보유하므로 사용자가 직접 발급하거나 로그인할 필요가 없습니다.
 
 ```bash
-kittypaw login --api-url https://api.kittypaw.app  # OAuth 로그인
 kittypaw skill install air-quality                # 패키지 설치
 ```
 

@@ -1,9 +1,9 @@
 [package]
 id = "air-quality"
 name = "미세먼지 알림"
-version = "2.0.1"
+version = "2.0.2"
 license = "Elastic-2.0"
-description = "미세먼지/초미세먼지 등급을 확인하고 알려줍니다. (kittypaw-api OAuth 인증)"
+description = "KittyAPI AirKorea 프록시로 미세먼지/초미세먼지 등급을 확인하고 알려줍니다."
 author = "KittyPaw Team"
 category = "health"
 tags = ["air", "dust", "health", "korea"]
@@ -36,13 +36,6 @@ type = "string"
 required = false
 default = "https://api.kittypaw.app"
 source = "kittypaw-api/api_url"
-
-[[config.fields]]
-key = "access_token"
-label = "API Token"
-type = "secret"
-required = false
-source = "kittypaw-api/access_token"
 
 [[config.fields]]
 key = "station"
