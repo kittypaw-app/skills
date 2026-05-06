@@ -1,4 +1,4 @@
-# URL Monitor
+# URL 상태 모니터
 
 Periodically checks whether a configured URL is reachable. Stores the last known status in Storage and sends a Telegram alert only when the status changes — so you get notified on outages and recoveries without being spammed on every check.
 

@@ -1,7 +1,7 @@
 [package]
 id = "rss-digest"
 name = "RSS 뉴스 요약"
-version = "1.0.0"
+version = "1.0.1"
 license = "Elastic-2.0"
 description = "RSS 피드에서 새 글을 가져와 LLM으로 요약합니다."
 author = "KittyPaw Team"
@@ -15,6 +15,18 @@ cron = "0 9 * * *"
 [permissions]
 primitives = ["Http", "Llm", "Storage"]
 allowed_hosts = ["*"]
+
+[[config.fields]]
+key = "telegram_token"
+label = "Telegram Bot Token"
+type = "secret"
+required = true
+
+[[config.fields]]
+key = "chat_id"
+label = "Telegram Chat ID"
+type = "string"
+required = true
 
 [[config.fields]]
 key = "feed_url"

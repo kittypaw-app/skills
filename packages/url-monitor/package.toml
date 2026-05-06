@@ -1,11 +1,11 @@
 [package]
 id = "url-monitor"
-name = "URL 모니터"
-version = "1.0.0"
+name = "URL 상태 모니터"
+version = "1.0.1"
 license = "Elastic-2.0"
 description = "주기적으로 URL 접속을 확인하고, 상태가 바뀌면 알려줍니다."
 author = "KittyPaw Team"
-category = "devops"
+category = "monitoring"
 tags = ["monitoring", "uptime", "storage", "alert"]
 
 [trigger]
@@ -15,6 +15,18 @@ cron = "*/5 * * * *"
 [permissions]
 primitives = ["Http", "Storage"]
 allowed_hosts = ["*"]
+
+[[config.fields]]
+key = "telegram_token"
+label = "Telegram Bot Token"
+type = "secret"
+required = true
+
+[[config.fields]]
+key = "chat_id"
+label = "Telegram Chat ID"
+type = "string"
+required = true
 
 [[config.fields]]
 key = "target_url"

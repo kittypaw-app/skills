@@ -22,7 +22,7 @@ try {
   return `Error fetching stock data for ${stockCode}: ${e}`;
 }
 
-const currentPrice = Number(stockData.currentPrice || stockData.closePrice || 0);
+const currentPrice = parseKRW(stockData.currentPrice || stockData.closePrice || stockData.nowVal || 0);
 if (!currentPrice) {
   return `Could not parse current price from API response.`;
 }
@@ -85,3 +85,10 @@ const message =
   `${emoji} ${direction} 목표가 ${targetFormatted}원 돌파\\!`;
 
 return message;
+
+function parseKRW(value) {
+  if (typeof value === "number") return Number.isFinite(value) ? value : 0;
+  const cleaned = String(value || "").replace(/[^\d.-]/g, "");
+  const parsed = Number(cleaned);
+  return Number.isFinite(parsed) ? parsed : 0;
+}

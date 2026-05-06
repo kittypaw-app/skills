@@ -1,7 +1,7 @@
 [package]
 id = "air-quality"
 name = "미세먼지 알림"
-version = "2.0.0"
+version = "2.0.1"
 license = "Elastic-2.0"
 description = "미세먼지/초미세먼지 등급을 확인하고 알려줍니다. (kittypaw-api OAuth 인증)"
 author = "KittyPaw Team"
@@ -18,11 +18,23 @@ allowed_hosts = ["localhost", "127.0.0.1", "api.kittypaw.app"]
 context = ["locale"]
 
 [[config.fields]]
+key = "telegram_token"
+label = "텔레그램 봇 토큰"
+type = "secret"
+required = true
+
+[[config.fields]]
+key = "chat_id"
+label = "텔레그램 Chat ID"
+type = "string"
+required = true
+
+[[config.fields]]
 key = "api_url"
 label = "API Server URL"
 type = "string"
 required = false
-default = "http://localhost:8080"
+default = "https://api.kittypaw.app"
 source = "kittypaw-api/api_url"
 
 [[config.fields]]

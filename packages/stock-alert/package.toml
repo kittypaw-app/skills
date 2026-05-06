@@ -1,7 +1,7 @@
 [package]
 id = "stock-alert"
 name = "주식 알림"
-version = "1.0.0"
+version = "1.0.1"
 license = "Elastic-2.0"
 description = "지정한 종목이 목표 상한가 또는 하한가를 돌파하면 즉시 알려줍니다."
 author = "KittyPaw Team"
@@ -15,6 +15,18 @@ cron = "*/30 9-16 * * 1-5"
 [permissions]
 primitives = ["Http", "Storage"]
 allowed_hosts = ["m.stock.naver.com"]
+
+[[config.fields]]
+key = "telegram_token"
+label = "텔레그램 봇 토큰"
+type = "secret"
+required = true
+
+[[config.fields]]
+key = "chat_id"
+label = "텔레그램 Chat ID"
+type = "string"
+required = true
 
 [[config.fields]]
 key = "stock_code"

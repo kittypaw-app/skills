@@ -7,7 +7,7 @@
 kittypaw-api 서버 연동 방식입니다 (API 키 직접 발급 불필요).
 
 ```bash
-kittypaw login --api-url http://localhost:8080   # OAuth 로그인
+kittypaw login --api-url https://api.kittypaw.app  # OAuth 로그인
 kittypaw skill install air-quality                # 패키지 설치
 ```
 

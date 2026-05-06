@@ -1,7 +1,7 @@
 [package]
 id = "weather-briefing"
 name = "매일 아침 날씨 브리핑"
-version = "1.0.2"
+version = "1.0.3"
 license = "Elastic-2.0"
 description = "매일 아침 설정한 지역의 날씨 예보를 요약해서 텔레그램으로 보내줍니다. 지금/현재/몇 시간 뒤 날씨 즉답은 '날씨 조회' 스킬을 사용하세요."
 author = "KittyPaw Team"
@@ -33,6 +33,18 @@ name = "KMA"
 label = "Weather data by KMA"
 url = "https://apihub.kma.go.kr"
 required = false
+
+[[config.fields]]
+key = "telegram_token"
+label = "텔레그램 봇 토큰"
+type = "secret"
+required = true
+
+[[config.fields]]
+key = "chat_id"
+label = "텔레그램 Chat ID"
+type = "string"
+required = true
 
 [[config.fields]]
 key = "city"

@@ -1,7 +1,7 @@
 [package]
 id = "news-digest-kr"
 name = "오늘의 뉴스 요약"
-version = "1.0.0"
+version = "1.0.1"
 license = "Elastic-2.0"
 description = "매일 아침 구글 뉴스에서 주요 기사를 가져와 LLM으로 한 줄 요약합니다."
 author = "KittyPaw Team"
@@ -17,6 +17,18 @@ primitives = ["Http", "Llm"]
 allowed_hosts = ["news.google.com"]
 
 [[config.fields]]
+key = "telegram_token"
+label = "텔레그램 봇 토큰"
+type = "secret"
+required = true
+
+[[config.fields]]
+key = "chat_id"
+label = "텔레그램 Chat ID"
+type = "string"
+required = true
+
+[[config.fields]]
 key = "category"
 label = "뉴스 카테고리"
 type = "select"
@@ -29,5 +41,5 @@ key = "count"
 label = "요약할 기사 수"
 type = "number"
 required = false
-default = 5
+default = "5"
 hint = "요약할 기사 수"

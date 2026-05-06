@@ -1,7 +1,7 @@
 const ctx = JSON.parse(__context__);
 const config = ctx.config || {};
 
-const apiURL = config.api_url || "http://localhost:8080";
+const apiURL = config.api_url || "https://api.kittypaw.app";
 const token = config.access_token || "";
 const station = config.station || "종로구";
 
