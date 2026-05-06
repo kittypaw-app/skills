@@ -4,8 +4,8 @@
     {
       "id": "weather-briefing",
       "name": "매일 아침 날씨 브리핑",
-      "version": "1.0.0",
-      "description": "매일 아침 설정한 지역의 날씨 예보를 요약해서 텔레그램으로 보내줍니다. 지금/현재 날씨 즉답은 '현재 날씨' 스킬을 사용하세요.",
+      "version": "1.0.2",
+      "description": "매일 아침 설정한 지역의 날씨 예보를 요약해서 텔레그램으로 보내줍니다. 지금/현재/몇 시간 뒤 날씨 즉답은 '날씨 조회' 스킬을 사용하세요.",
       "author": "KittyPaw Team",
       "category": "weather",
       "tags": [
@@ -159,34 +159,21 @@
     },
     {
       "id": "weather-now",
-      "name": "현재 날씨",
-      "version": "1.2.1",
-      "description": "지금 시점(현재/방금/막) 날씨와 비 여부를 즉답합니다. 한국 좌표는 기상청 KMA 초단기실황, 그 외는 wttr.in을 사용합니다. 알람/정기 발송은 '매일 아침 날씨 브리핑' 스킬을 사용하세요.",
+      "name": "날씨 조회",
+      "version": "1.3.0",
+      "description": "현재 날씨와 몇 시간 뒤 임박 예보를 즉답합니다. 한국 좌표는 기상청 KMA 초단기실황/초단기예보, 그 외는 wttr.in을 사용합니다. 알람/정기 발송은 '매일 아침 날씨 브리핑' 스킬을 사용하세요.",
       "author": "KittyPaw Team",
       "category": "weather",
       "tags": [
         "weather",
         "now",
+        "soon",
+        "forecast",
         "kma",
         "wttr",
         "instant"
       ],
       "download_url": "https://raw.githubusercontent.com/kittypaw-app/skills/main/packages/weather-now"
-    },
-    {
-      "id": "weather-soon",
-      "name": "몇 시간 뒤 날씨 예보",
-      "version": "0.1.1",
-      "description": "1-6시간 뒤처럼 임박한 미래 날씨를 답합니다. 한국 좌표는 기상청 KMA 초단기예보를 사용합니다. 지금 날씨는 '현재 날씨', 매일 아침 알림은 '매일 아침 날씨 브리핑'을 사용하세요.",
-      "author": "KittyPaw Team",
-      "category": "weather",
-      "tags": [
-        "weather",
-        "soon",
-        "kma",
-        "forecast"
-      ],
-      "download_url": "https://raw.githubusercontent.com/kittypaw-app/skills/main/packages/weather-soon"
     },
     {
       "id": "world-time",
