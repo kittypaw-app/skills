@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 
 async function runWeatherNow(ctx) {
   const code = await readFile("packages/weather-now/main.js", "utf8");
@@ -107,7 +107,16 @@ async function testPublicWeatherSearchIsConsolidated() {
   assert.match(weatherNow.description, /몇 시간 뒤/);
 }
 
+async function testWeatherSoonPackageIsRemoved() {
+  await assert.rejects(
+    () => stat("packages/weather-soon"),
+    (err) => err && err.code === "ENOENT",
+    "weather-soon package directory should be removed"
+  );
+}
+
 await testWeatherNowKeepsCurrentWeatherPath();
 await testWeatherNowHandlesImminentForecast();
 await testPublicWeatherSearchIsConsolidated();
+await testWeatherSoonPackageIsRemoved();
 console.log("weather consolidation tests passed");
